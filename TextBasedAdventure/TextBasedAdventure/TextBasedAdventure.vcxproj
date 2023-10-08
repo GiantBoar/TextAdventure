@@ -139,15 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="TextBasedAdventure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Sprite.txt" />
+    <Text Include="StoryNotes.txt" />
     <Text Include="Title.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source.h" />
+    <ClInclude Include="Graphics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

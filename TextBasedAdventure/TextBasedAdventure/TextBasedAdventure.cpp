@@ -1,15 +1,19 @@
 #include <iostream>
 #include <list>
 
-#include "Source.h"
+#include "Graphics.h"
 
 int main()
 {
     Graphics* graphics = Graphics::GetInstance();
 
-    //graphics->Draw();
-
     graphics->DrawTitle();
 
-    while (true) {}
+    while (true) 
+    {
+        Sleep(100);
+
+        graphics->Clear();
+        graphics->DrawTitle();
+    }
 }

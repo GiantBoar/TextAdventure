@@ -1,4 +1,4 @@
-#include "Source.h"
+#include "Graphics.h"
 
 Graphics* Graphics::_instance = nullptr;
 
@@ -58,6 +58,7 @@ void Graphics::DrawTitle()
 {
 	short x = 0, y = 0, type = 0;
 
+	srand(192);
 	for (int i = 0; i < 50; i++)
 	{
 		x = rand() % windowSize.X + 1;
