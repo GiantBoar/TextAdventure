@@ -39,19 +39,13 @@ Graphics::Graphics()
 
 void Graphics::Draw()
 {
-	for (int y = 0; y < windowSize.Y - 5; y++)
-	{
-		for (int x = 0; x < windowSize.X; x++)
-		{
-			if (x % 2 == 0) std::cout << "O";
-			else std::cout << ".";
-		}
-		std::cout << '\n';
-	}
+	DrawTitle();
+}
 
-	printf("\033[%d;%dH", 4, 4);
-
-	std::cout << "farts";
+void Graphics::Redraw()
+{
+	Clear();
+	Draw();
 }
 
 void Graphics::DrawTitle()
@@ -75,7 +69,7 @@ void Graphics::DrawTitle()
 
 	for (int i = 0; i < titleCard.size(); i++)
 	{
-		printf("\033[%d;%dH%s", i + 3, horizontalSpacing, titleCard[i].c_str());
+		//printf("\033[%d;%dH%s", i + 3, horizontalSpacing, titleCard[i].c_str());
 	}
 }
 

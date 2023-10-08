@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include "UI.h"
 
 #pragma region Colour Definitions
 #define COLOUR_DEFAULT 0
@@ -55,6 +56,7 @@ public:
 
 	// graphics-related functions
 	void Draw();
+	void Redraw();
 	void DrawTitle();
 	void Clear();
 
