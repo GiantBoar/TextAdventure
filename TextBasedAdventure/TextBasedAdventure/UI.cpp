@@ -71,6 +71,16 @@ void UI::Button::Draw()
 
 #pragma region UILayout
 
+void Test(WORD word)
+{
+
+}
+
+void UI::UILayoutGroup::OnSelectionChange(WORD word)
+{
+
+}
+
 UI::UILayoutGroup::UILayoutGroup(int x, int y, int verticalSpacing, int elementNum, ...) : UIElement(x, y)
 {
 	elements = std::vector<UIElement>();
@@ -88,7 +98,8 @@ UI::UILayoutGroup::UILayoutGroup(int x, int y, int verticalSpacing, int elementN
 		elements.push_back(element);
 	}
 
-	InputHandler::GetInstance()->AddKey(VK_UP, OnSelectionChange);
+	void (UI::UILayoutGroup::*fart)(WORD) = &OnSelectionChange;
+	InputHandler::GetInstance()->AddKey(VK_UP, fart);
 }
 
 

@@ -17,7 +17,7 @@ private:
 
 	DWORD InputsRead = 0;
 
-	std::unordered_map<WORD, void*(WORD)> keymap;
+	std::unordered_map<WORD, void(*)(WORD)> keymap;
 
 	InputHandler();
 
@@ -37,6 +37,6 @@ public:
 
 	void ProcessInput();
 
-	void AddKey(WORD key, void* data);
+	void AddKey(WORD key, void (*data)(WORD));
 	void RemoveKey(WORD key);
 };

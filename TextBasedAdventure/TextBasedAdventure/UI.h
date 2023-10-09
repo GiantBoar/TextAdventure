@@ -44,7 +44,7 @@ public:
 
 		UILayoutGroup(int x, int y, int verticalSpacing, int elementNum, ...);
 
-		void OnSelectionChange(int change);
+		void OnSelectionChange(WORD word);
 
 		void Draw() override;
 	};
