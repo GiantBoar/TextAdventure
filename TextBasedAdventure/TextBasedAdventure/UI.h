@@ -4,8 +4,9 @@
 #include <Windows.h>
 #include <string>
 
-namespace UI
+class UI
 {
+public:
 	// base class for UI elements
 	class UIElement
 	{
@@ -39,8 +40,27 @@ namespace UI
 	public:
 		std::vector<UIElement> elements;
 
+		int selectedIndex = 0;
+
 		UILayoutGroup(int x, int y, int verticalSpacing, int elementNum, ...);
+
+		void OnSelectionChange(int change);
 
 		void Draw() override;
 	};
-}
+
+
+	static UI* _instance;
+	static UI* GetInstance();
+
+	bool uiChanged = false;
+
+	std::vector<UIElement> uiElements;
+
+	void AddElement(UIElement element);
+	void Reset();
+
+	void DrawUI();
+
+	bool Changed();
+};

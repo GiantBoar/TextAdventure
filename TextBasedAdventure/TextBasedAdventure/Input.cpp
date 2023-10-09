@@ -29,7 +29,7 @@ void InputHandler::ProcessInput()
 }
 
 
-void InputHandler::AddKey(WORD key, void *data)
+void InputHandler::AddKey(WORD key, void *data(WORD))
 {
 	if (keymap.find(key) != keymap.end()) return;
 

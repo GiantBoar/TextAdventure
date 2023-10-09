@@ -38,6 +38,9 @@
     <Text Include="StoryNotes.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Sky.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">

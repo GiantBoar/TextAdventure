@@ -17,7 +17,7 @@ private:
 
 	DWORD InputsRead = 0;
 
-	std::unordered_map<WORD, void(*)> keymap;
+	std::unordered_map<WORD, void*(WORD)> keymap;
 
 	InputHandler();
 

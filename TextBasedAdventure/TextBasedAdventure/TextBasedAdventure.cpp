@@ -5,38 +5,52 @@
 #include "Graphics.h"
 #include "Input.h"
 
+Graphics* graphics;
+InputHandler* inputs;
+UI* ui;
+
+void TitleScreen();
+
+bool runGame = true;
+
 int main()
 {
-    HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
 
-    DWORD prev_mode;
-    GetConsoleMode(hInput, &prev_mode);
-    //SetConsoleMode(hInput, ENABLE_EXTENDED_FLAGS | (prev_mode & ~ENABLE_QUICK_EDIT_MODE));
+    DWORD previousMode;
+    GetConsoleMode(inputHandle, &previousMode);
+    SetConsoleMode(inputHandle, ENABLE_EXTENDED_FLAGS | (previousMode & ~ENABLE_QUICK_EDIT_MODE));
 
-    Graphics* graphics = Graphics::GetInstance();
+    graphics = Graphics::GetInstance();
+    inputs = InputHandler::GetInstance();
+    ui = UI::GetInstance();
+
+    TitleScreen();
 
     graphics->Draw();
 
-    UI::Button start = UI::Button(graphics->windowSize.X / 2, graphics->windowSize.Y / 2, " - Start Game - ", nullptr);
-    start.centreAligned = true;
+    bool changed = false;
 
-    InputHandler* handler = InputHandler::GetInstance();
-
-    while (true) 
+    while (runGame)
     {
-        //Sleep(100);
+        inputs->ProcessInput();
 
-        //graphics->Redraw();
 
-        //start.Draw();
+        changed = ui->Changed();
 
-        //handler->ProcessInput();
+        if (changed) graphics->Redraw();
     }
 
-    SetConsoleMode(hInput, ENABLE_EXTENDED_FLAGS | (prev_mode));
+    SetConsoleMode(inputHandle, ENABLE_EXTENDED_FLAGS | (previousMode));
 }
 
 void TitleScreen()
 {
+    graphics->Reset();
 
+    graphics->LoadSprite("Title.txt", 1, 1, 2);
+    graphics->sprites[graphics->sprites.size() - 1].position.X = (graphics->windowSize.X - graphics->sprites[graphics->sprites.size() - 1].spriteLines[0].length()) / 2;
+    graphics->LoadSprite("Sky.txt", 0, 1, 1);
+
+    graphics->SortSprites();
 }

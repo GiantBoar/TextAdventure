@@ -12,7 +12,7 @@ Graphics* Graphics::GetInstance()
 	return _instance;
 }
 
-void Graphics::Init(int width, int height)
+void Graphics::Init(short width, short height)
 {
 	CONSOLE_SCREEN_BUFFER_INFOEX consoleScreenBuffer;
 	consoleScreenBuffer.cbSize = sizeof(consoleScreenBuffer);
@@ -34,12 +34,26 @@ void Graphics::Init(int width, int height)
 
 Graphics::Graphics()
 {
+	sprites.clear();
+
 	Init(120, 30);
+}
+
+bool SortByPriority(Sprite& a, Sprite& b)
+{
+	return (a.sortPriority < b.sortPriority);
+}
+void Graphics::SortSprites()
+{
+	std::sort(sprites.begin(), sprites.end(), SortByPriority);
 }
 
 void Graphics::Draw()
 {
-	DrawTitle();
+	for (int i = 0; i < sprites.size(); i++)
+	{
+		sprites[i].Draw();
+	}
 }
 
 void Graphics::Redraw()
@@ -48,88 +62,53 @@ void Graphics::Redraw()
 	Draw();
 }
 
-void Graphics::DrawTitle()
-{
-	short x = 0, y = 0, type = 0;
-
-	srand(192);
-	for (int i = 0; i < 50; i++)
-	{
-		x = rand() % windowSize.X + 1;
-		y = rand() % windowSize.Y + 1;
-		type = rand() % 2;
-
-		printf("\033[%d;%dH%c", y, x, (type == 0) ? '.' : '+');
-	}
-
-	std::vector<std::string> titleCard;
-	ReadFromFile("title.txt", titleCard);
-
-	short horizontalSpacing = (windowSize.X - titleCard[0].length()) / 2;
-
-	for (int i = 0; i < titleCard.size(); i++)
-	{
-		//printf("\033[%d;%dH%s", i + 3, horizontalSpacing, titleCard[i].c_str());
-	}
-}
-
 void Graphics::Clear()
 {
 	system("cls");
 }
 
-void Graphics::ReadFromFile(const char* fileName, std::vector<std::string>& lines)
+void Graphics::Reset()
 {
-	lines.clear();
+
+}
+
+void Graphics::LoadSprite(const char* fileName, int priority, int x, int y)
+{
+	Sprite sprite = Sprite(fileName, priority, x, y);
+	sprites.push_back(sprite);
+}
+
+
+
+
+Sprite::Sprite(const char* fileName, int priority, int x, int y)
+{
+	position.X = x;
+	position.Y = y;
+
+	sortPriority = priority;
+
+	ReadFromFile(fileName);
+}
+
+void Sprite::Draw()
+{
+	for (int i = 0; i < spriteLines.size(); i++)
+	{
+		printf("\033[%d;%dH%s", position.Y + i, position.X, spriteLines[i].c_str());
+	}
+}
+
+void Sprite::ReadFromFile(const char* fileName)
+{
+	spriteLines = std::vector<std::string>();
+	spriteLines.clear();
+
 	std::ifstream file(fileName);
 	std::string s;
+
 	while (getline(file, s))
-		lines.push_back(s);
-}
-
-
-
-
-
-
-/*void Graphics::Clear()
-{
-	system("cls");
-}
-
-void Graphics::Draw()
-{
-	/*
-	ifstream bgfile;
-	bgfile.open("Sprite.txt");
-
-	int screenWidth = Graphics::windowSize.X;
-	//std::string lineread;
-	char lineread;
-
-	ifstream file("Sprite.txt");
-
-	for (int y = 0; y < Graphics::windowSize.Y; y++)
 	{
-		for (int x = 0; x < Graphics::windowSize.X; x++)
-		{
-
-		}
-		cout << endl;
+		spriteLines.push_back(s);
 	}
 }
-
-Sprite::Sprite(string fileName)
-{
-	ifstream file(fileName);
-}
-
-void Sprite::LoadSprite(std::string fileName)
-{
-	ifstream file(fileName);
-	string str;
-
-	while (getline(file, str)) {
-		this.sprite.push_back(str);
-	}
-}*/

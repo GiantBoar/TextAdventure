@@ -5,6 +5,8 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <map>
+#include <algorithm>
 #include "UI.h"
 
 #pragma region Colour Definitions
@@ -29,6 +31,22 @@
 #define COLOUR_GREY COLOUR_BRIGHT(COLOUR_BLACK)
 #pragma endregion
 
+
+struct Sprite 
+{
+public:
+	std::vector<std::string> spriteLines;
+
+	int sortPriority = 0;
+	COORD position;
+
+	Sprite(const char* fileName, int priority, int x, int y);
+
+	void ReadFromFile(const char* fileName);
+
+	void Draw();
+};
+
 class Graphics
 {
 private:
@@ -36,12 +54,14 @@ private:
 	static Graphics* _instance;
 
 	// resize the window and initialize the class
-	void Init(int width, int height);
+	void Init(short width, short height);
 
 	// private constructor for the singleton
 	Graphics();
 
 public:
+	std::vector<Sprite> sprites;
+
 	COORD windowSize;
 
 	// our singleton instance retriever
@@ -53,12 +73,13 @@ public:
 	// making sure that our singleton cannot be assigned to
 	void operator = (const Graphics&) = delete;
 
-
 	// graphics-related functions
 	void Draw();
 	void Redraw();
-	void DrawTitle();
 	void Clear();
 
-	void ReadFromFile(const char* fileName, std::vector<std::string>& lines);
+	void Reset();
+
+	void LoadSprite(const char* fileName, int priority, int x, int y);
+	void SortSprites();
 };

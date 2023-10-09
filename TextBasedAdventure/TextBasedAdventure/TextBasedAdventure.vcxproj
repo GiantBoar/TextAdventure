@@ -147,6 +147,7 @@
   <ItemGroup>
     <Text Include="Sprite.txt" />
     <Text Include="StoryNotes.txt" />
+    <Text Include="Sky.txt" />
     <Text Include="Title.txt" />
   </ItemGroup>
   <ItemGroup>
