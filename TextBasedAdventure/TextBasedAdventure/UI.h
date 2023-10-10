@@ -1,11 +1,15 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include <Windows.h>
 #include <string>
 
 class UI
 {
+private:
+	static UI* _instance;
+
 public:
 	// base class for UI elements
 	class UIElement
@@ -18,7 +22,9 @@ public:
 
 		UIElement(int x, int y);
 
-		virtual void Draw() { }
+		virtual void Draw() { std::cout << "something is wrong"; }
+
+		virtual void Interact(WORD key) { }
 	};
 
 
@@ -40,20 +46,23 @@ public:
 	public:
 		std::vector<UIElement> elements;
 
+		int verticalSpacing = 0;
 		int selectedIndex = 0;
 
-		UILayoutGroup(int x, int y, int verticalSpacing, int elementNum, ...);
+		UILayoutGroup(int x, int y, int verticalSpacing);
 
-		void OnSelectionChange(WORD word);
+		void AddElements(int elementNum, ...);
+
+		void Interact(WORD key) override;
 
 		void Draw() override;
 	};
 
-
-	static UI* _instance;
 	static UI* GetInstance();
 
 	bool uiChanged = false;
+
+	UIElement *interactedElement = nullptr;
 
 	std::vector<UIElement> uiElements;
 

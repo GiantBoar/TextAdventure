@@ -48,6 +48,22 @@ void Graphics::SortSprites()
 	std::sort(sprites.begin(), sprites.end(), SortByPriority);
 }
 
+Sprite* Graphics::LoadSprite(const char* name, const char* fileName, int priority, int x, int y)
+{
+	Sprite sprite = Sprite(name, fileName, priority, x, y);
+	sprites.push_back(sprite);
+	return &(sprites[sprites.size() - 1]);
+}
+
+Sprite* Graphics::GetSprite(const char* name)
+{
+	for (int i = 0; i < sprites.size(); i++)
+	{
+		if (sprites[i].name == name) return &sprites[i];
+	}
+}
+
+
 void Graphics::Draw()
 {
 	for (int i = 0; i < sprites.size(); i++)
@@ -69,20 +85,14 @@ void Graphics::Clear()
 
 void Graphics::Reset()
 {
-
-}
-
-void Graphics::LoadSprite(const char* fileName, int priority, int x, int y)
-{
-	Sprite sprite = Sprite(fileName, priority, x, y);
-	sprites.push_back(sprite);
+	sprites.clear();
 }
 
 
-
-
-Sprite::Sprite(const char* fileName, int priority, int x, int y)
+Sprite::Sprite(const char* name, const char* fileName, int priority, int x, int y)
 {
+	this->name = name;
+
 	position.X = x;
 	position.Y = y;
 
@@ -95,7 +105,7 @@ void Sprite::Draw()
 {
 	for (int i = 0; i < spriteLines.size(); i++)
 	{
-		printf("\033[%d;%dH%s", position.Y + i, position.X, spriteLines[i].c_str());
+		printf("\033[%d;%dH\033[%dm%s\033[0m", position.Y + i, position.X, colour, spriteLines[i].c_str());
 	}
 }
 
@@ -111,4 +121,9 @@ void Sprite::ReadFromFile(const char* fileName)
 	{
 		spriteLines.push_back(s);
 	}
+}
+
+void Sprite::SetColours(int colour)
+{
+	this->colour = colour;
 }

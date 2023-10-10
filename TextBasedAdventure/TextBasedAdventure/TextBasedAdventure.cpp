@@ -9,7 +9,10 @@ Graphics* graphics;
 InputHandler* inputs;
 UI* ui;
 
-void TitleScreen();
+void TitleScreen(); 
+void StartGame();
+void Credits();
+void EndGame();
 
 bool runGame = true;
 
@@ -28,17 +31,17 @@ int main()
     TitleScreen();
 
     graphics->Draw();
+    //ui->DrawUI();
 
     bool changed = false;
 
     while (runGame)
     {
-        inputs->ProcessInput();
+        //inputs->ProcessInput();
 
+        //changed = ui->Changed();
 
-        changed = ui->Changed();
-
-        if (changed) graphics->Redraw();
+        //if (changed) graphics->Redraw();
     }
 
     SetConsoleMode(inputHandle, ENABLE_EXTENDED_FLAGS | (previousMode));
@@ -47,10 +50,30 @@ int main()
 void TitleScreen()
 {
     graphics->Reset();
+    ui->Reset();
 
-    graphics->LoadSprite("Title.txt", 1, 1, 2);
-    graphics->sprites[graphics->sprites.size() - 1].position.X = (graphics->windowSize.X - graphics->sprites[graphics->sprites.size() - 1].spriteLines[0].length()) / 2;
-    graphics->LoadSprite("Sky.txt", 0, 1, 1);
+    graphics->LoadSprite("Title", "Title.txt", 1, 1, 2);
+    graphics->sprites[graphics->sprites.size() - 1].position.X = (SHORT)((graphics->windowSize.X - graphics->sprites[graphics->sprites.size() - 1].spriteLines[0].length()) / 2);
+    graphics->LoadSprite("Background", "Sky.txt", 0, 1, 1);
+
+    graphics->GetSprite("Background")->SetColours(COLOUR_BRIGHT(COLOUR_BLACK));
+
+    //ui->AddElement(UI::Button(1, 1, "Start", StartGame));
 
     graphics->SortSprites();
+}
+
+void StartGame()
+{
+
+}
+
+void Credits()
+{
+
+}
+
+void EndGame()
+{
+
 }

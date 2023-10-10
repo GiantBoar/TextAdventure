@@ -4,6 +4,15 @@
 
 #pragma region Main UI
 
+void InteractWithUI(WORD key)
+{
+	if (UI::GetInstance()->interactedElement == nullptr) return;
+
+	int x = (key == VK_LEFT || key == VK_RIGHT) ? ((key == VK_LEFT) ? -1 : 1) : 0;
+	int y = (key == VK_UP || key == VK_DOWN) ? ((key == VK_UP) ? -1 : 1) : 0;
+	UI::GetInstance()->interactedElement->Interact(key);
+}
+
 UI* UI::_instance = nullptr;
 
 UI* UI::GetInstance()
@@ -71,40 +80,37 @@ void UI::Button::Draw()
 
 #pragma region UILayout
 
-void Test(WORD word)
-{
-
-}
-
-void UI::UILayoutGroup::OnSelectionChange(WORD word)
-{
-
-}
-
-UI::UILayoutGroup::UILayoutGroup(int x, int y, int verticalSpacing, int elementNum, ...) : UIElement(x, y)
+UI::UILayoutGroup::UILayoutGroup(int x, int y, int verticalSpacing) : UIElement(x, y)
 {
 	elements = std::vector<UIElement>();
 
+	UI::GetInstance()->interactedElement = this;
+}
+
+void UI::UILayoutGroup::AddElements(int elementNum, ...)
+{
 	va_list args;
 	va_start(args, elementNum);
 
 	for (int i = 0; i < elementNum; i++)
 	{
 		UIElement element = va_arg(args, UIElement);
-		
+
 		element.position.X = position.X;
 		element.position.Y = position.Y + i + (verticalSpacing * i);
 
 		elements.push_back(element);
 	}
-
-	void (UI::UILayoutGroup::*fart)(WORD) = &OnSelectionChange;
-	InputHandler::GetInstance()->AddKey(VK_UP, fart);
 }
 
+void UI::UILayoutGroup::Interact(WORD key)
+{
+	std::cout << "CRAZZZYYYYY";
+}
 
 void UI::UILayoutGroup::Draw()
 {
+	std::cout << "size is : " << elements.size();
 	for (int i = 0; i < elements.size(); i++)
 	{
 		elements[i].Draw();

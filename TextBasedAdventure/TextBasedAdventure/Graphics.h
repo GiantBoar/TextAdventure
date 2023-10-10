@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <algorithm>
 #include "UI.h"
 
@@ -37,12 +37,17 @@ struct Sprite
 public:
 	std::vector<std::string> spriteLines;
 
+	const char* name;
+
 	int sortPriority = 0;
+	int colour = 0;
+
 	COORD position;
 
-	Sprite(const char* fileName, int priority, int x, int y);
+	Sprite(const char* name, const char* fileName, int priority, int x, int y);
 
 	void ReadFromFile(const char* fileName);
+	void SetColours(int colour);
 
 	void Draw();
 };
@@ -80,6 +85,8 @@ public:
 
 	void Reset();
 
-	void LoadSprite(const char* fileName, int priority, int x, int y);
+	Sprite* GetSprite(const char* name);
+
+	Sprite* LoadSprite(const char* name, const char* fileName, int priority, int x, int y);
 	void SortSprites();
 };
