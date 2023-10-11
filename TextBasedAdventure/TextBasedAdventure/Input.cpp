@@ -1,7 +1,7 @@
 #include "Input.h"
 
+// singleton instancing and constructor
 InputHandler* InputHandler::_instance = nullptr;
-
 InputHandler* InputHandler::GetInstance()
 {
 	if (_instance == NULL)
@@ -11,7 +11,6 @@ InputHandler* InputHandler::GetInstance()
 
 	return _instance;
 }
-
 InputHandler::InputHandler()
 {
 	inputHandle = GetStdHandle(STD_INPUT_HANDLE);
@@ -24,7 +23,7 @@ void InputHandler::ProcessInput()
 
 	if (keymap.find(currentInput) != keymap.end() && GetKeyState(currentInput) & KEY_PRESSED)
 	{
-		((void(*)())keymap[currentInput])();
+		((void(*)(WORD))keymap[currentInput])(currentInput);
 	}
 }
 

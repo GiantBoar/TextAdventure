@@ -142,18 +142,17 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="TextBasedAdventure.cpp" />
-    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Sprite.txt" />
     <Text Include="StoryNotes.txt" />
     <Text Include="Sky.txt" />
+    <Text Include="Credits.txt" />
     <Text Include="Title.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
