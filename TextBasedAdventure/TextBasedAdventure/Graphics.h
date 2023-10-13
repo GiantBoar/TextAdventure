@@ -71,23 +71,38 @@ struct ScreenCoord
 class Sprite 
 {
 public:
-	std::vector<std::string> spriteLines;
+	typedef std::vector<std::string> Frame;
+
+	class Animation
+	{
+	public:
+		float speed = .5f;
+		std::vector<Frame> frames;
+	};
+
+	std::unordered_map<std::string, Animation> animations;
 
 	const char* name;
+
+	std::string currentAnimation = "MAIN";
+	int currentFrame = 0;
 
 	int sortPriority = 0;
 	int colour = 0;
 
+	int length = 0;
+	int height = 0;
+
 	ScreenCoord position;
 
-	Sprite(const char* name, const char* fileName, int priority, int x, int y);
+	Sprite(const char* name, const char* fileName, int priority, ScreenCoord position);
 
 	void ReadFromFile(const char* fileName);
 	void SetColours(int colour);
 
 	void Draw();
 
-	int Width();
+	void PlayAnimation(std::string animation);
 };
 
 namespace UI
@@ -120,13 +135,8 @@ private:
 	// our singleton instance pointer
 	static GraphicsHandler* _instance;
 
-	// resize the window and initialize the class
-	void Init(short width, short height);
-
 	// private constructor for the singleton
 	GraphicsHandler();
-
-	bool changed = false;
 
 public:
 	std::vector<Sprite> sprites;
@@ -135,6 +145,7 @@ public:
 	int selectedButtonIndex;
 
 	ScreenCoord windowSize;
+	bool changed = false;
 
 	// our singleton instance retriever
 	static GraphicsHandler* GetInstance();
@@ -155,8 +166,10 @@ public:
 
 	Sprite* GetSprite(const char* name);
 
-	Sprite* LoadSprite(const char* name, const char* fileName, int priority, int x, int y);
+	Sprite* LoadSprite(const char* name, const char* fileName, int priority, ScreenCoord position);
 	void SortSprites();
+
+	void CheckAnimations();
 
 	ScreenCoord GetWindowCentre();
 

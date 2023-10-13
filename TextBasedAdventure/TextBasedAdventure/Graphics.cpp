@@ -14,15 +14,17 @@ GraphicsHandler* GraphicsHandler::GetInstance()
 	return _instance;
 }
 
-void GraphicsHandler::Init(short width, short height)
+GraphicsHandler::GraphicsHandler()
 {
+	SetConsoleOutputCP(65001);
+
 	CONSOLE_SCREEN_BUFFER_INFOEX consoleScreenBuffer = CONSOLE_SCREEN_BUFFER_INFOEX();
 	consoleScreenBuffer.cbSize = sizeof(consoleScreenBuffer);
 
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleScreenBufferInfoEx(consoleHandle, &consoleScreenBuffer);
 
-	windowSize = ScreenCoord(width, height);
+	windowSize = ScreenCoord(120, 30);
 
 	consoleScreenBuffer.dwSize.X = windowSize.x;
 	consoleScreenBuffer.dwSize.Y = windowSize.y;
@@ -37,11 +39,6 @@ void GraphicsHandler::Init(short width, short height)
 	selectedButtonIndex = 0;
 }
 
-GraphicsHandler::GraphicsHandler()
-{
-	Init(120, 30);
-}
-
 ScreenCoord GraphicsHandler::GetWindowCentre() { return ScreenCoord(windowSize.x / 2, windowSize.y / 2); }
 
 bool SortByPriority(Sprite& a, Sprite& b)
@@ -53,9 +50,9 @@ void GraphicsHandler::SortSprites()
 	std::sort(sprites.begin(), sprites.end(), SortByPriority);
 }
 
-Sprite* GraphicsHandler::LoadSprite(const char* name, const char* fileName, int priority, int x, int y)
+Sprite* GraphicsHandler::LoadSprite(const char* name, const char* fileName, int priority, ScreenCoord position)
 {
-	Sprite sprite = Sprite(name, fileName, priority, x, y);
+	Sprite sprite = Sprite(name, fileName, priority, position);
 	sprites.push_back(sprite);
 	return &(sprites[sprites.size() - 1]);
 }
@@ -67,6 +64,14 @@ Sprite* GraphicsHandler::GetSprite(const char* name)
 		if (sprites[i].name == name) return &sprites[i];
 	}
 	return nullptr;
+}
+
+void GraphicsHandler::CheckAnimations()
+{
+	for (int i = 0; i < sprites.size(); i++)
+	{
+
+	}
 }
 
 
@@ -118,37 +123,72 @@ bool GraphicsHandler::Changed()
 
 #pragma region Sprites
 
-Sprite::Sprite(const char* name, const char* fileName, int priority, int x, int y)
+Sprite::Sprite(const char* name, const char* fileName, int priority, ScreenCoord position)
 {
 	this->name = name;
 
-	position = ScreenCoord(x, y);
+	this->position = position;
 
 	sortPriority = priority;
+
+	currentAnimation = "MAIN";
 
 	ReadFromFile(fileName);
 }
 
 void Sprite::Draw()
 {
-	for (int i = 0; i < spriteLines.size(); i++)
+	for (int i = 0; i < animations[currentAnimation].frames[currentFrame].size(); i++)
 	{
-		printf("\033[%d;%dH\033[%dm%s\033[0m", position.y + i, position.x, colour, spriteLines[i].c_str());
+		printf("\033[%d;%dH\033[%dm%s\033[0m", position.y + i, position.x, colour, animations[currentAnimation].frames[currentFrame][i].c_str());
 	}
 }
 
 void Sprite::ReadFromFile(const char* fileName)
 {
-	spriteLines = std::vector<std::string>();
-	spriteLines.clear();
+	animations = std::unordered_map<std::string, Animation>();
 
 	std::ifstream file(fileName);
-	std::string s;
+	std::string s, animName;
+	animName = "MAIN";
+	int frame = 0;
 
+	animations[animName].frames.push_back(Sprite::Frame());
+
+	int lineCount = 0;
 	while (getline(file, s))
 	{
-		spriteLines.push_back(s);
+		if (s.length() == 0) continue;
+
+		lineCount++;
+
+		if (s[0] == '$')
+		{
+			std::string name = s.substr(2, s.length());
+			animName = name;
+			animations[animName].frames.push_back(Sprite::Frame());
+			frame = 0;
+
+			if (height == 0 || lineCount > height) height = lineCount;
+			lineCount = 0;
+
+			continue;
+		}
+		else if (s[0] == '&')
+		{
+			frame++;
+			animations[animName].frames.push_back(Sprite::Frame());
+			if (height == 0 || lineCount > height) height = lineCount;
+			lineCount = 0;
+			continue;
+		}
+
+		if (length == 0 || s.length() > length) length = (int)s.length();
+
+		animations[animName].frames[frame].push_back(s);
 	}
+
+	if (height == 0 || lineCount > height) height = lineCount;
 }
 
 void Sprite::SetColours(int colour)
@@ -156,7 +196,12 @@ void Sprite::SetColours(int colour)
 	this->colour = colour;
 }
 
-int Sprite::Width() { return (int)(spriteLines[0].length()); }
+void Sprite::PlayAnimation(std::string name)
+{
+	currentFrame = 0;
+	if (animations.find(name) != animations.end()) currentAnimation = name;
+	GraphicsHandler::GetInstance()->changed = true;
+}
 
 #pragma endregion
 

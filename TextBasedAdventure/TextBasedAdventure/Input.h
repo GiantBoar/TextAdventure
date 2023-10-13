@@ -39,4 +39,8 @@ public:
 
 	void AddKey(WORD key, void (*data)(WORD));
 	void RemoveKey(WORD key);
+
+
+
+
 };
