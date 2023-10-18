@@ -18,13 +18,23 @@ InputHandler::InputHandler()
 
 void InputHandler::ProcessInput()
 {
-	ReadConsoleInput(inputHandle, &inputRecord, 1, &InputsRead);
-	WORD currentInput = inputRecord.Event.KeyEvent.wVirtualKeyCode;
+	DWORD inpCount;
+	GetNumberOfConsoleInputEvents(inputHandle, &inpCount);
 
-	if (keymap.find(currentInput) != keymap.end() && GetKeyState(currentInput) & KEY_PRESSED)
+	if (inpCount > 0)
 	{
-		((void(*)(WORD))keymap[currentInput])(currentInput);
+		ReadConsoleInput(inputHandle, &inputRecord, 1, &InputsRead);
+
+		WORD currentInput = inputRecord.Event.KeyEvent.wVirtualKeyCode;
+
+		if (keymap.find(currentInput) != keymap.end() && GetKeyState(currentInput) & KEY_PRESSED)
+		{
+			((void(*)(WORD))keymap[currentInput])(currentInput);
+		}
 	}
+
+	if(inpCount > 0)
+		FlushConsoleInputBuffer(inputHandle);
 }
 
 

@@ -2,4 +2,13 @@
 
 #include <chrono>
 
-long long GetCurrentTime();
+#include "Graphics.h"
+#include "Input.h"
+
+class Time
+{
+public:
+	static std::clock_t GetTime();
+};
+
+GraphicsHandler* graphics;

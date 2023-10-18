@@ -1,6 +1,6 @@
 #include "Game.h"
 
-long long GetCurrentTime()
+std::clock_t Time::GetTime()
 {
-	return std::chrono::steady_clock::now().time_since_epoch().count();
+	return std::clock();
 }

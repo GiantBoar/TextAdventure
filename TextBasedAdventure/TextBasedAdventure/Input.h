@@ -19,6 +19,8 @@ private:
 
 	std::unordered_map<WORD, void(*)(WORD)> keymap;
 
+	DWORD lastInputCount;
+
 	InputHandler();
 
 public:
@@ -39,8 +41,4 @@ public:
 
 	void AddKey(WORD key, void (*data)(WORD));
 	void RemoveKey(WORD key);
-
-
-
-
 };
