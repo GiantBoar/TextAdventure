@@ -1,14 +1,12 @@
 #pragma once
 
-#include <iostream>
-#include <windows.h>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <unordered_map>
 #include <algorithm>
-
-#include "Game.h"
+#include <iostream>
+#include <windows.h>
 
 // some definitions of colour codes I use so that I dont have to remember them or take up space in memory
 #pragma region Colour Definitions
@@ -30,6 +28,8 @@
 #define COLOUR_WHITE 37
 #define COLOUR_GREY COLOUR_BRIGHT(COLOUR_BLACK)
 #pragma endregion
+
+std::clock_t GetTime();
 
 // structure to store an X and Y position
 struct ScreenCoord : COORD
@@ -148,6 +148,8 @@ public:
 	ScreenCoord windowSize;
 	bool changed = false;
 
+	std::vector<std::string> textCache;
+
 	// our singleton instance retriever
 	static GraphicsHandler* GetInstance();
 
@@ -177,4 +179,6 @@ public:
 	void OrganiseButtons(ScreenCoord position, ScreenCoord spacing, std::vector<UI::Button> buttons);
 	void ChangeSelection(int selection);
 	void Interact();
+
+	void DrawInputBox();
 };

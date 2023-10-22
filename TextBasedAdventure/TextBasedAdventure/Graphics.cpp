@@ -198,7 +198,7 @@ Sprite* GraphicsHandler::GetSprite(const char* name)
 
 void GraphicsHandler::CheckAnimations()
 {
-	int t = Time::GetTime();
+	int t = GetTime();
 	AnimatedSprite* ptr;
 	for (int i = 0; i < sprites.size(); i++)
 	{
@@ -262,6 +262,17 @@ bool GraphicsHandler::Changed()
 		return true;
 	}
 	return false;
+}
+
+
+
+void GraphicsHandler::DrawInputBox()
+{
+	printf("\033[%d;%dH%s", windowSize.Y - 3, 1, std::string(windowSize.X, '_').c_str());
+	printf("\033[%d;%dH  > ", windowSize.Y - 1, 1);
+
+	std::string fart;
+	std::getline(std::cin, fart);
 }
 
 #pragma endregion
