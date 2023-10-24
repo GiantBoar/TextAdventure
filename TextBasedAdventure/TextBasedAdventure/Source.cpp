@@ -27,7 +27,28 @@ int main()
 
     SetupInputs();
 
-    graphics->DrawInputBox();
+    //graphics->DrawInputBox();
+
+    graphics->WriteLine(GraphicsHandler::ColourString("fart fart fart", COLOUR_BRIGHT(COLOUR_BLUE)));
+    Sleep(1000);
+    graphics->WriteLine("how do ya do");
+    Sleep(1000);
+    graphics->WriteLine("quagmire");
+    Sleep(1000);
+    graphics->WriteLine("fart fart fart");
+    Sleep(1000);
+    graphics->WriteLine("how do ya do");
+    Sleep(1000);
+    graphics->WriteLine("quagmire");
+    Sleep(1000);
+    graphics->WriteLine("fart fart fart");
+    Sleep(1000);
+    graphics->WriteLine("how do ya do");
+    Sleep(1000);
+    graphics->WriteLine("quagmire");
+    Sleep(1000);
+    graphics->WriteLine("fart fart fart");
+    Sleep(1000);
 
     while (true) {}
 

@@ -155,6 +155,8 @@ GraphicsHandler::GraphicsHandler()
 
 	SetConsoleScreenBufferInfoEx(consoleHandle, &consoleScreenBuffer);
 
+	state = GraphicsState::MENU;
+
 	selectedButtonIndex = 0;
 }
 
@@ -218,17 +220,26 @@ void GraphicsHandler::CheckAnimations()
 
 void GraphicsHandler::Draw()
 {
-	for (int i = 0; i < sprites.size(); i++)
+	switch (state)
 	{
-		sprites[i]->Draw();
-	}
+	case GraphicsState::MENU:
+		for (int i = 0; i < sprites.size(); i++)
+		{
+			sprites[i]->Draw();
+		}
 
-	for (int i = 0; i < buttons.size(); i++)
-	{
-		buttons[i].Draw();
-	}
+		for (int i = 0; i < buttons.size(); i++)
+		{
+			buttons[i].Draw();
+		}
 
-	printf("\033[%d;%dH", windowSize.Y, windowSize.X);
+		printf("\033[%d;%dH", windowSize.Y, windowSize.X);
+
+		break;
+
+	case GraphicsState::TEXT:
+		DrawInputBox();
+	}
 }
 
 void GraphicsHandler::Redraw()
@@ -273,6 +284,35 @@ void GraphicsHandler::DrawInputBox()
 
 	std::string fart;
 	std::getline(std::cin, fart);
+}
+
+void GraphicsHandler::WriteLine(std::string line)
+{
+	ClearScreen();
+
+	lastCacheIndex = (lastCacheIndex + 1) % WORDCACHESIZE;
+	textCache[lastCacheIndex] = "";
+
+	for (int i = 0; i < WORDCACHESIZE; i++)
+	{
+		printf("\033[%d;%dH%s", windowSize.Y - (4 + WORDCACHESIZE) + i, 2, textCache[(i + 1 + lastCacheIndex) % 6].c_str());
+	}
+
+	textCache[lastCacheIndex] = line;
+
+	for (int i = 0; i < line.length(); i++)
+	{
+		std::cout << line[i];
+		Sleep(30);
+	}
+}
+
+
+
+
+std::string GraphicsHandler::ColourString(std::string str, int colour)
+{
+	return "\033[" + std::to_string(colour) + "m" + str + "\033[0m";
 }
 
 #pragma endregion

@@ -32,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Sprite.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="Title.txt">
       <Filter>Resource Files</Filter>
     </Text>

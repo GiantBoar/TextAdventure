@@ -146,7 +146,6 @@
     <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Sprite.txt" />
     <Text Include="StoryNotes.txt" />
     <Text Include="Mountain.txt" />
     <Text Include="TitleBG.txt" />

@@ -2,11 +2,11 @@
 
 #include <fstream>
 #include <vector>
-#include <string>
 #include <unordered_map>
 #include <algorithm>
 #include <iostream>
 #include <windows.h>
+#include <string>
 
 // some definitions of colour codes I use so that I dont have to remember them or take up space in memory
 #pragma region Colour Definitions
@@ -28,6 +28,8 @@
 #define COLOUR_WHITE 37
 #define COLOUR_GREY COLOUR_BRIGHT(COLOUR_BLACK)
 #pragma endregion
+
+#define WORDCACHESIZE 6
 
 std::clock_t GetTime();
 
@@ -130,6 +132,13 @@ namespace UI
 	void InteractUI(WORD key);
 }
 
+enum class GraphicsState
+{
+	MENU,
+	TEXT,
+	BATTLE
+};
+
 class GraphicsHandler
 {
 private:
@@ -140,6 +149,8 @@ private:
 	GraphicsHandler();
 
 public:
+	GraphicsState state;
+
 	std::vector<Sprite*> sprites;
 
 	std::vector<UI::Button> buttons;
@@ -148,7 +159,8 @@ public:
 	ScreenCoord windowSize;
 	bool changed = false;
 
-	std::vector<std::string> textCache;
+	std::string textCache[WORDCACHESIZE];
+	short lastCacheIndex = 0;
 
 	// our singleton instance retriever
 	static GraphicsHandler* GetInstance();
@@ -181,4 +193,7 @@ public:
 	void Interact();
 
 	void DrawInputBox();
+	void WriteLine(std::string line);
+
+	static std::string ColourString(std::string str, int colour);
 };
