@@ -1,7 +1,5 @@
 #include "Game.h"
 
-
-
 GraphicsHandler* graphics = GraphicsHandler::GetInstance();
 InputHandler* inputs = InputHandler::GetInstance();
 
@@ -26,6 +24,10 @@ void SetupInputs()
     inputs->AddKey(VK_RETURN, UI::InteractUI);
 }
 
+void AsrielTeehee()
+{
+    std::cout << "grah grah grah";
+}
 
 void TitleScreen()
 {
