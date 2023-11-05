@@ -281,21 +281,18 @@ void GraphicsHandler::DrawInputBox()
 {
 	printf("\033[%d;%dH%s", windowSize.Y - 3, 1, std::string(windowSize.X, '_').c_str());
 	printf("\033[%d;%dH  > ", windowSize.Y - 1, 1);
-
-	std::string fart;
-	std::getline(std::cin, fart);
 }
 
 void GraphicsHandler::WriteLine(std::string line)
 {
-	ClearScreen();
+	Redraw();
 
 	lastCacheIndex = (lastCacheIndex + 1) % WORDCACHESIZE;
 	textCache[lastCacheIndex] = "";
 
 	for (int i = 0; i < WORDCACHESIZE; i++)
 	{
-		printf("\033[%d;%dH%s", windowSize.Y - (4 + WORDCACHESIZE) + i, 2, textCache[(i + 1 + lastCacheIndex) % 6].c_str());
+		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i, 2, textCache[(i + 1 + lastCacheIndex) % 6].c_str());
 	}
 
 	textCache[lastCacheIndex] = line;

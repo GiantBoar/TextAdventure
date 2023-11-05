@@ -27,15 +27,13 @@ int main()
 
     SetupInputs();
 
-    //graphics->DrawInputBox();
+    graphics->state = GraphicsState::TEXT;
 
-    graphics->WriteLine(GraphicsHandler::ColourString("fart fart fart", COLOUR_BRIGHT(COLOUR_BLUE)));
+    graphics->WriteLine("Your horse grows sluggish and heaving, dragging its sodden hooves through the thick mud.\n");
+    graphics->WriteLine("The warm glow of a campfire beams through the mist ahead of you\n");
+
 
     while (true) {}
-
-    //WriteLine("Your horse grows sluggish and heaving, dragging its sodden hooves through the thick mud.\n", 800);
-    //WriteLine("The warm glow of a campfire beams through the mist ahead of you\n", 800);
-
 
     //TitleScreen();
 
