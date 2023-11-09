@@ -5,13 +5,14 @@ InputHandler* inputs = InputHandler::GetInstance();
 
 bool gameRunning = true;
 
+#pragma region General Game Functions
+
 void GameLoop()
 {
-	inputs->ProcessInput();
+    inputs->ProcessInput();
 
-	graphics->CheckAnimations();
-
-	if (graphics->Changed()) graphics->Redraw();
+    graphics->CheckAnimations();
+    graphics->CheckRedraw();
 }
 
 void SetupInputs()
@@ -24,10 +25,9 @@ void SetupInputs()
     inputs->AddKey(VK_RETURN, UI::InteractUI);
 }
 
-void AsrielTeehee()
-{
-    std::cout << "grah grah grah";
-}
+#pragma endregion
+
+#pragma region Menu Functions
 
 void TitleScreen()
 {
@@ -68,6 +68,8 @@ void StartGame() {
 void EndGame() {
     gameRunning = false;
 }
+
+#pragma endregion
 
 
 std::clock_t GetTime()

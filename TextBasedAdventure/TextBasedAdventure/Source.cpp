@@ -27,23 +27,19 @@ int main()
 
     SetupInputs();
 
-    graphics->state = GraphicsState::TEXT;
+    graphics->state = GraphicsState::MENU;
 
-    graphics->WriteLine("Your horse grows sluggish and heaving, dragging its sodden hooves through the thick mud.\n");
-    graphics->WriteLine("The warm glow of a campfire beams through the mist ahead of you\n");
+    //graphics->WriteLine("Your horse grows sluggish and heaving, dragging its sodden hooves through the thick mud.\n");
+    //graphics->WriteLine("The warm glow of a campfire beams through the mist ahead of you\n");
 
+    TitleScreen();
 
-    while (true) {}
+    graphics->Draw();
 
-    //TitleScreen();
-
-    //graphics->Draw();
-
-    /*
     while (gameRunning)
     {
         GameLoop();
-    }*/
+    }
 
     SetConsoleMode(inputHandle, ENABLE_EXTENDED_FLAGS | (previousMode));
 }

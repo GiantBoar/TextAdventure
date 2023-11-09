@@ -174,6 +174,7 @@ public:
 	// graphics-related functions
 	void Draw();
 	void Redraw();
+	bool CheckRedraw();
 	void ClearScreen();
 	void Reset();
 
