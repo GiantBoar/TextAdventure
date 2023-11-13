@@ -35,3 +35,6 @@ Journey to the mountain -> Campfire -> mysterious forest -> abandoned town -> ba
 
 Notes about each area:
 the journey to the mountain will be mostly a custscene, with the player choosing their character, setting off on their horse and gaining control when they arrive at the campsite
+
+To Do:
+- Double Buffer
