@@ -1,10 +1,3 @@
-//#define JSON_IS_AMALGAMATION
-
-/*
-#include "json.h"
-#include "json-forwards.h"
-*/
-
 #include "Game.h"
 
 void WriteLine(std::string line, int pause)
@@ -32,7 +25,7 @@ int main()
     //graphics->WriteLine("Your horse grows sluggish and heaving, dragging its sodden hooves through the thick mud.\n");
     //graphics->WriteLine("The warm glow of a campfire beams through the mist ahead of you\n");
 
-    TitleScreen();
+    ChangeState(GameState::Title);
 
     graphics->Draw();
 

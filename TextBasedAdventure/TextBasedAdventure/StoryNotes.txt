@@ -12,29 +12,19 @@ You see a faint glow besides the path further up ahead
 https://writing-prompt-s.tumblr.com/post/172811507450/threefeline-corancoranthemagicalman
 
 
-
-   _o_
--~@U@O@~-
-
-              (`  ).                   _           
-             (     ).              .:(`  )`.       
-)           _(       '`.          :(   .    )      
-        .=(`(      .   )     .--  `.  (    ) )      
-       ((    (..__.:'-'   .+(   )   ` _`  ) )                 
-`.     `(       ) )       (   .  )     (   )  ._   
-  )      ` __.:'   )     (   (   ))     `-'.-(`  ) 
-)  )  ( )       --'       `- __.'         :(      )) 
-.-'  (_.'          .')                    `(    )  ))
-                  (_  )                     ` __.:'          
-
-
-
-
 It should go:
 Journey to the mountain -> Campfire -> mysterious forest -> abandoned town -> base of the mountain -> grand library -> reaching the summit -> the final shrine
 
 Notes about each area:
-the journey to the mountain will be mostly a custscene, with the player choosing their character, setting off on their horse and gaining control when they arrive at the campsite
+Journey - the journey to the mountain will be mostly a custscene, with the player choosing their character, setting off on their horse and gaining control when they arrive at the campsite
+Campfire - Simple branching text dialogue scene, can potentially end in combat
+Forest - maze where you have to input N S E W directional inputs
+abandoned town - random enemy encounters + some npcs to talk to
+base of the mountain - read a plaque, find the body of an unlocky traveller
+grand library - cut if you dont have time lol
+the summit - larger fight
+the shrine - pray and dialogue with the god, you get one final wish
 
 To Do:
 - Double Buffer
+- make it so you cant resize

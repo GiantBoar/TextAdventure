@@ -29,9 +29,13 @@
 #define COLOUR_GREY COLOUR_BRIGHT(COLOUR_BLACK)
 #pragma endregion
 
-#define WORDCACHESIZE 6
+#define WORDCACHESIZE 5
+
+enum class GameState;
 
 std::clock_t GetTime();
+
+void ChangeState(GameState);
 
 // structure to store an X and Y position
 struct ScreenCoord : COORD
@@ -117,12 +121,14 @@ namespace UI
 
 		std::string buttonLabel;
 
+		GameState newState;
 		void* onInteract = nullptr;
 		bool selected = false;
 
 		bool centreAligned;
 
 		Button(ScreenCoord pos, std::string label, bool centreAligned, void* interactFunction);
+		Button(ScreenCoord pos, std::string label, bool centreAligned, GameState changeState);
 
 		void Draw();
 	};
@@ -136,7 +142,8 @@ enum class GraphicsState
 {
 	MENU,
 	TEXT,
-	BATTLE
+	BATTLE,
+	INPUT
 };
 
 class GraphicsHandler
@@ -178,12 +185,13 @@ public:
 	void ClearScreen();
 	void Reset();
 
-	bool Changed();
 	void CheckAnimations();
+
+	void WarnInputError();
 
 	Sprite* GetSprite(const char* name);
 
-	Sprite* LoadSprite(const char* name, const char* fileName, int priority, ScreenCoord position);
+	Sprite* LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position);
 	Sprite* LoadAnimation(const char* name, const char* fileName, int priority, ScreenCoord position);
 	void SortSprites();
 
@@ -195,6 +203,8 @@ public:
 
 	void DrawInputBox();
 	void WriteLine(std::string line);
+	void DrawWordCache();
+	void ClearWordCache();
 
 	static std::string ColourString(std::string str, int colour);
 };

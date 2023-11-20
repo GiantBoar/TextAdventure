@@ -4,8 +4,14 @@
 #include <iostream>
 #include <Windows.h>
 #include <stdio.h>
+#include <string>
 
 #define KEY_PRESSED 0x8000
+
+std::clock_t GetTime();
+
+void LowercaseString(std::string& str);
+COORD GetInputPosition();
 
 class InputHandler
 {
@@ -19,9 +25,10 @@ private:
 
 	std::unordered_map<WORD, void(*)(WORD)> keymap;
 
-	DWORD lastInputCount;
-
 	InputHandler();
+
+	bool splitInput;
+	std::vector<std::string> inputOptions;
 
 public:
 	class KeyData
@@ -41,4 +48,9 @@ public:
 
 	void AddKey(WORD key, void (*data)(WORD));
 	void RemoveKey(WORD key);
+
+	std::string GetRawInputString();
+	std::string GetInputString();
+
+	void SetInputOptions(std::vector<std::string> options);
 };

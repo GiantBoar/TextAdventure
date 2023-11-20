@@ -174,10 +174,10 @@ void GraphicsHandler::SortSprites()
 }
 
 // loads a sprite from a file and allocates to the heap
-Sprite* GraphicsHandler::LoadSprite(const char* name, const char* fileName, int priority, ScreenCoord position)
+Sprite* GraphicsHandler::LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position)
 {
-	Sprite* sprite = new Sprite(name, priority, position);
-	sprite->ReadFromFile(fileName);
+	Sprite* sprite = new Sprite(name.c_str(), priority, position);
+	sprite->ReadFromFile(fileName.c_str());
 
 	sprites.push_back(sprite);
 	return (sprites[sprites.size() - 1]);
@@ -221,7 +221,19 @@ void GraphicsHandler::CheckAnimations()
 	}
 }
 
-// draws th graphics depending on the current graphics state
+void GraphicsHandler::WarnInputError()
+{
+	Redraw();
+
+	printf("\033[%dmINPUT ERROR\033[0m", COLOUR_BRIGHT(COLOUR_RED));
+
+	// wait until the pause time has passed
+	Sleep(1000);
+
+	Redraw();
+}
+
+// draws the graphics depending on the current graphics state
 // if its a menu it draws all buttons and sprites using their draw() functions
 // if its a text scene, it draws the scene image, the text input box, and allows for the text being typewritten to the screen
 void GraphicsHandler::Draw()
@@ -244,7 +256,25 @@ void GraphicsHandler::Draw()
 		break;
 
 	case GraphicsState::TEXT:
+		for (int i = 0; i < sprites.size(); i++)
+		{
+			sprites[i]->Draw();
+		}
+
+		DrawWordCache();
+
 		DrawInputBox();
+
+		break;
+	case GraphicsState::INPUT:
+		for (int i = 0; i < sprites.size(); i++)
+		{
+			sprites[i]->Draw();
+		}
+
+		DrawInputBox();
+
+		break;
 	}
 }
 
@@ -274,6 +304,8 @@ void GraphicsHandler::Reset()
 		delete sprites[i];
 	}
 
+	ClearWordCache();
+
 	sprites.clear();
 	buttons.clear();
 
@@ -295,22 +327,35 @@ void GraphicsHandler::DrawInputBox()
 // typewrites out the inputted line and adds it to the cache
 void GraphicsHandler::WriteLine(std::string line)
 {
-	Redraw();
-
 	lastCacheIndex = (lastCacheIndex + 1) % WORDCACHESIZE;
 	textCache[lastCacheIndex] = "";
 
-	for (int i = 0; i < WORDCACHESIZE; i++)
-	{
-		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i, 2, textCache[(i + 1 + lastCacheIndex) % 6].c_str());
-	}
+	Redraw();
+
+	DrawWordCache();
 
 	textCache[lastCacheIndex] = line;
 
 	for (int i = 0; i < line.length(); i++)
 	{
 		std::cout << line[i];
-		Sleep(30);
+		Sleep(40);
+	}
+}
+
+void GraphicsHandler::DrawWordCache()
+{
+	for (int i = 0; i < WORDCACHESIZE; i++)
+	{
+		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i, 2, textCache[(i + 1 + lastCacheIndex) % WORDCACHESIZE].c_str());
+	}
+}
+
+void GraphicsHandler::ClearWordCache()
+{
+	for (int i = 0; i < WORDCACHESIZE; i++)
+	{
+		textCache[i] = "";
 	}
 }
 
@@ -365,7 +410,10 @@ void GraphicsHandler::Interact()
 {
 	if (buttons.size() == 0 || selectedButtonIndex < 0) return;
 
-	((void(*)())buttons[selectedButtonIndex].onInteract)();
+	if (buttons[selectedButtonIndex].onInteract != nullptr)
+		((void(*)())buttons[selectedButtonIndex].onInteract)();
+	else
+		ChangeState(buttons[selectedButtonIndex].newState);
 }
 
 // namespace to keep UI functions and class functions contained
@@ -381,6 +429,17 @@ namespace UI
 		centreAligned = centred;
 
 		onInteract = interactFunction;
+	}
+	
+	Button::Button(ScreenCoord pos, std::string label, bool centred, GameState state)
+	{
+		position = pos;
+
+		buttonLabel = label;
+
+		centreAligned = centred;
+
+		newState = state;
 	}
 
 	// draw function for the button, including the coloured background for a selected button

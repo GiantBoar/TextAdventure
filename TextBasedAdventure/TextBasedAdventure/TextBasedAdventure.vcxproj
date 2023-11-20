@@ -142,10 +142,12 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
+    <ClCompile Include="SaveSystem.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Characters.txt" />
     <Text Include="StoryNotes.txt" />
     <Text Include="Mountain.txt" />
     <Text Include="TitleBG.txt" />
@@ -158,6 +160,10 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="json-forwards.h" />
     <ClInclude Include="json.h" />
+    <ClInclude Include="SaveSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="player.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

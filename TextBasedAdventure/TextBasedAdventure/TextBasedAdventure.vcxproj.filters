@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Json">
       <UniqueIdentifier>{77daef27-b318-4a34-bb3d-5d6f2aed23ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Json">
+      <UniqueIdentifier>{0cedc64b-999a-4ac2-8a4e-6d54598a144b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="jsoncpp.cpp">
       <Filter>Source Files\Json</Filter>
     </ClCompile>
+    <ClCompile Include="SaveSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Title.txt">
@@ -51,6 +57,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="Mountain.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Characters.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
@@ -70,5 +79,13 @@
     <ClInclude Include="json-forwards.h">
       <Filter>Header Files\Json</Filter>
     </ClInclude>
+    <ClInclude Include="SaveSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="player.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
   </ItemGroup>
 </Project>

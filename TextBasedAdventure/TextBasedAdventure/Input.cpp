@@ -16,6 +16,11 @@ InputHandler::InputHandler()
 	inputHandle = GetStdHandle(STD_INPUT_HANDLE);
 }
 
+void LowercaseString(std::string& str)
+{
+	for (int i = 0; i < str.length(); i++) str[i] = std::tolower(str[i]);
+}
+
 void InputHandler::ProcessInput()
 {
 	DWORD inpCount;
@@ -56,4 +61,67 @@ InputHandler::KeyData::KeyData(void* onPress)
 	pressed = false;
 
 	onKeyDown = onPress;
+}
+
+std::string InputHandler::GetRawInputString()
+{
+	COORD p = GetInputPosition();
+	printf("\033[%d;%dH", p.Y, p.X);
+
+	std::string input;
+	std::getline(std::cin, input);
+	return input;
+}
+
+std::string InputHandler::GetInputString()
+{
+	COORD p = GetInputPosition();
+	printf("\033[%d;%dH", p.Y, p.X);
+
+	std::string input;
+	std::getline(std::cin, input);
+	LowercaseString(input);
+
+	bool checkVal = false;
+	std::string checkString = input;
+
+	// only checks the first part of the input
+	if (splitInput)
+	{
+		checkString = "";
+		for (int i = 0; i < input.length(); i++)
+		{
+			if (input[i] == ' ') break;
+
+			checkString.push_back(input[i]);
+		}
+	}
+
+	for (int i = 0; i < inputOptions.size(); i++)
+	{
+		if (inputOptions[i] == input)
+		{
+			checkVal = true;
+			break;
+		}
+	}
+
+	if (checkVal)
+	{
+		return input;
+	}
+	else 
+	{
+		return "ERROR";
+	}
+}
+
+void InputHandler::SetInputOptions(std::vector<std::string> options)
+{
+	inputOptions.clear();
+
+	for (int i = 0; i < options.size(); i++)
+	{
+		inputOptions.push_back(options[i]);
+	}
 }
