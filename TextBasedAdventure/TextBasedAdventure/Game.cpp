@@ -6,6 +6,8 @@ InputHandler* inputs = InputHandler::GetInstance();
 SaveSystem::PlayerData* playerData = new SaveSystem::PlayerData();
 
 bool gameRunning = true;
+
+// the current state of the game
 GameState currentState;
 
 #pragma region General Game Functions
@@ -26,6 +28,11 @@ void SetupInputs()
     inputs->AddKey(VK_DOWN, UI::NavigateUI);
 
     inputs->AddKey(VK_RETURN, UI::InteractUI);
+}
+
+std::clock_t GetTime()
+{
+    return std::clock();
 }
 
 #pragma endregion
@@ -69,7 +76,7 @@ void ChangeState(GameState newState)
         if (SaveSystem::CanLoadSave())
         {
             graphics->OrganiseButtons(graphics->GetWindowCentre() + ScreenCoord(0, 6), ScreenCoord(0, 2), std::vector<UI::Button> {
-                UI::Button(ScreenCoord(1, 1), " - New Game - ", true, GameState::CharacterSelect),
+                UI::Button(ScreenCoord(1, 1), " - New Game - ", true, SelectCharacter),
                     UI::Button(ScreenCoord(1, 1), " - Continue - ", true, ContinueGame),
                     UI::Button(ScreenCoord(1, 1), " - Credits - ", true, GameState::Credits),
                     UI::Button(ScreenCoord(1, 1), " - Exit - ", true, EndGame)
@@ -78,14 +85,14 @@ void ChangeState(GameState newState)
         else
         {
             graphics->OrganiseButtons(graphics->GetWindowCentre() + ScreenCoord(0, 6), ScreenCoord(0, 2), std::vector<UI::Button> {
-                UI::Button(ScreenCoord(1, 1), " - New Game - ", true, GameState::CharacterSelect),
+                UI::Button(ScreenCoord(1, 1), " - New Game - ", true, SelectCharacter),
                     UI::Button(ScreenCoord(1, 1), " - Credits - ", true, GameState::Credits),
                     UI::Button(ScreenCoord(1, 1), " - Exit - ", true, EndGame)
             });
         }
 
         graphics->SortSprites();
-        break; 
+        break;
     }
     case GameState::Credits:
     {
@@ -101,104 +108,116 @@ void ChangeState(GameState newState)
         });
         break;
     }
-    case GameState::CharacterSelect:
+    }
+}
+
+void SelectCharacter()
+{
+    graphics->Reset();
+    graphics->state = GraphicsState::INPUT;
+
+    /*
+    graphics->LoadSprite("warrior", "WarriorCard.txt", 1, ScreenCoord(3, 3))->SetColours(COLOUR_BRIGHT(COLOUR_RED));
+    graphics->LoadSprite("wizard", "WizardCard.txt", 1, ScreenCoord(42, 3))->SetColours(COLOUR_BRIGHT(COLOUR_CYAN));
+    graphics->LoadSprite("archer", "ArcherCard.txt", 1, ScreenCoord(81, 3))->SetColours(COLOUR_BRIGHT(COLOUR_GREEN));
+    */
+
+    graphics->LoadSprite("warrior", "WarriorCard.txt", 1, ScreenCoord(3, 3));
+    graphics->LoadSprite("wizard", "WizardCard.txt", 1, ScreenCoord(42, 3));
+    graphics->LoadSprite("archer", "ArcherCard.txt", 1, ScreenCoord(81, 3));
+
+    graphics->Redraw();
+
+    std::string input; 
+    std::vector<std::string> classes{ "warrior", "wizard", "archer" };
+    inputs->SetInputOptions(classes);
+
+    while (true)
     {
-        graphics->Reset();
-        graphics->state = GraphicsState::INPUT;
+        input = inputs->GetInputString();
 
-        graphics->LoadSprite("Characters", "Characters.txt", 1, ScreenCoord(2, 1));
+        if (input == "ERROR")
+        {
+            graphics->WarnInputError();
+        }
+        else
+        {
+            // setting up player abilities
+            if (input == "warrior")
+            {
+                playerData->attacks.push_back(PlayerAttacks::Slash);
+                playerData->skills.push_back(PlayerSkills::Heal);
+            }
+            else if (input == "wizard")
+            {
+                playerData->attacks.push_back(PlayerAttacks::Poke);
+                playerData->skills.push_back(PlayerSkills::Lightning);
+            }
+            else if (input == "archer")
+            {
+                playerData->attacks.push_back(PlayerAttacks::Shoot);
+                playerData->skills.push_back(PlayerSkills::Focus);
+            }
 
+            break;
+        }
+    }
+
+    for (int i = 0; i < classes.size(); i++)
+    {
+        if (classes[i] != input) graphics->GetSprite(classes[i])->SetColours(COLOUR_GREY);
+    }
+
+    graphics->Redraw();
+
+    Sprite* icon = graphics->GetSprite(input);
+
+    int weights[] = { 0, 1, 0, -1 };
+    ScreenCoord cachePos = icon->position;
+
+    for (int i = 0; i < 10; i++)
+    {
+        icon->position = cachePos + ScreenCoord(0, weights[i % 4]);
+        graphics->Redraw();
+        Sleep(250);
+    }
+
+    graphics->Reset();
+    graphics->state = GraphicsState::TEXT;
+
+    std::string name;
+    bool nameSelected = false;
+
+    while (!nameSelected)
+    {
+        graphics->ClearWordCache();
         graphics->Redraw();
 
-        std::string input;
-        inputs->SetInputOptions(std::vector<std::string>{ "warrior", "wizard", "archer" });
+        graphics->WriteLine("Please enter your name:");
 
-        while (true)
+        name = inputs->GetRawInputString();
+
+        if (name == "") graphics->WarnInputError();
+        else
         {
-            input = inputs->GetInputString();
+            graphics->WriteLine("You are called \033[95m" + name + "\033[0m, is this correct? (yes/no)");
+            inputs->SetInputOptions(std::vector<std::string>{ "yes", "no" });
 
-            if (input == "ERROR")
+            while (!nameSelected)
             {
-                graphics->WarnInputError();
-            }
-            else 
-            {
-                // setting up player abilities
-                if (input == "warrior")
+                input = inputs->GetInputString();
+
+                if (input == "ERROR") graphics->WarnInputError();
+                else
                 {
-                    playerData->attacks.push_back(PlayerAttacks::Slash);
-                    playerData->skills.push_back(PlayerSkills::Heal);
-                }
-                else if (input == "wizard")
-                {
-                    playerData->attacks.push_back(PlayerAttacks::Poke);
-                    playerData->skills.push_back(PlayerSkills::Lightning);
-                }
-                else if (input == "archer")
-                {
-                    playerData->attacks.push_back(PlayerAttacks::Shoot);
-                    playerData->skills.push_back(PlayerSkills::Focus);
-                }
-
-                break;
-            }
-        }
-
-        graphics->Reset();
-        graphics->state = GraphicsState::TEXT;
-
-        std::string name;
-
-        bool nameSelected = false;
-
-        while (!nameSelected)
-        {
-            graphics->ClearWordCache();
-            graphics->Redraw();
-
-            graphics->WriteLine("Please enter your name:");
-
-            name = inputs->GetRawInputString();
-
-            if (name == "") graphics->WarnInputError();
-            else 
-            {
-                graphics->WriteLine("You are called \033[95m" + name + "\033[0m, is this correct? (yes/no)");
-                inputs->SetInputOptions(std::vector<std::string>{ "yes", "no" });
-
-                while (!nameSelected)
-                {
-                    input = inputs->GetInputString();
-
-                    if (input == "ERROR") graphics->WarnInputError();
-                    else 
-                    {
-                        if (input == "yes")
-                            nameSelected = true;
-                        else
-                            break;
-                    }
+                    if (input == "yes")
+                        nameSelected = true;
+                    else
+                        break;
                 }
             }
         }
-
-        playerData->name = name;
-
-        break;
     }
-    }
-}
 
-void PerformStateActions()
-{
-    switch (currentState)
-    {
-
-    }
-}
-
-
-std::clock_t GetTime()
-{
-    return std::clock();
+    playerData->name = name;
 }

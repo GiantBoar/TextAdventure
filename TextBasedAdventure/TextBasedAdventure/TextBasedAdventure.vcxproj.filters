@@ -22,6 +22,9 @@
     <Filter Include="Resource Files\Json">
       <UniqueIdentifier>{0cedc64b-999a-4ac2-8a4e-6d54598a144b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Characters">
+      <UniqueIdentifier>{a4186f25-5dff-4d64-98bf-bb0d5ba54b63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -40,6 +43,9 @@
       <Filter>Source Files\Json</Filter>
     </ClCompile>
     <ClCompile Include="SaveSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Combat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,6 +68,18 @@
     <Text Include="Characters.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Characters - Copy.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="ArcherCard.txt">
+      <Filter>Resource Files\Characters</Filter>
+    </Text>
+    <Text Include="WarriorCard.txt">
+      <Filter>Resource Files\Characters</Filter>
+    </Text>
+    <Text Include="WizardCard.txt">
+      <Filter>Resource Files\Characters</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -80,6 +98,9 @@
       <Filter>Header Files\Json</Filter>
     </ClInclude>
     <ClInclude Include="SaveSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Combat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

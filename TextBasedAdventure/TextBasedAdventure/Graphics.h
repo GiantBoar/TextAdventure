@@ -46,26 +46,23 @@ struct ScreenCoord : COORD
 		this->Y = Y;
 	}
 
-	ScreenCoord& operator-(const ScreenCoord& other){
-		this->X -= other.X;
-		this->Y -= other.Y;
-		return *this;
+	ScreenCoord operator-(const ScreenCoord& other){
+		return ScreenCoord(this->X - other.X, this->Y - other.Y);
 	}
-	ScreenCoord& operator+(const ScreenCoord& other){
+	ScreenCoord operator+(const ScreenCoord& other){
+		return ScreenCoord(this->X + other.X, this->Y + other.Y);
+	}
+	ScreenCoord& operator+=(const ScreenCoord& other) {
 		this->X += other.X;
 		this->Y += other.Y;
 		return *this;
 	}
 
-	ScreenCoord& operator*(const int other){
-		this->X *= other;
-		this->Y *= other;
-		return *this;
+	ScreenCoord operator*(const int other){
+		return ScreenCoord(this->X * other, this->Y * other);
 	}
-	ScreenCoord& operator/(const int other){
-		this->X /= other;
-		this->Y /= other;
-		return *this;
+	ScreenCoord operator/(const int other){
+		return ScreenCoord(this->X / other, this->Y / other);
 	}
 };
 
@@ -73,7 +70,7 @@ struct Sprite
 {
 	std::vector<std::string> spriteLines;
 
-	const char* name;
+	std::string name;
 	short sortPriority = 0;
 	short colour = 0;
 
@@ -114,6 +111,17 @@ struct AnimatedSprite : Sprite
 
 namespace UI
 {
+	class Label
+	{
+		ScreenCoord position;
+		bool centreAligned;
+		std::string text;
+
+		Label(std::string labelText, ScreenCoord pos, bool centred);
+
+		void Draw();
+	};
+
 	class Button
 	{
 	public:
@@ -189,7 +197,7 @@ public:
 
 	void WarnInputError();
 
-	Sprite* GetSprite(const char* name);
+	Sprite* GetSprite(std::string name);
 
 	Sprite* LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position);
 	Sprite* LoadAnimation(const char* name, const char* fileName, int priority, ScreenCoord position);

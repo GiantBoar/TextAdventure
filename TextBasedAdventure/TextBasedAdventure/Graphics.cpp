@@ -194,7 +194,7 @@ Sprite* GraphicsHandler::LoadAnimation(const char* name, const char* fileName, i
 }
 
 // get a pointer to the sprite with the parameter name
-Sprite* GraphicsHandler::GetSprite(const char* name)
+Sprite* GraphicsHandler::GetSprite(std::string name)
 {
 	for (int i = 0; i < sprites.size(); i++)
 		if (sprites[i]->name == name) return sprites[i];
@@ -419,6 +419,18 @@ void GraphicsHandler::Interact()
 // namespace to keep UI functions and class functions contained
 namespace UI
 {
+	Label::Label(std::string labelText, ScreenCoord pos, bool centred)
+	{
+		text = labelText;
+		position = pos;
+		centreAligned = centred;
+	}
+
+	void Label::Draw()
+	{
+		printf("\033[%d;%dH%s", position.Y, centreAligned ? position.X - (int)(text.length() / 2) : position.X, text.c_str());
+	}
+
 	// constructor for a button that assigns all its data
 	Button::Button(ScreenCoord pos, std::string label, bool centred, void* interactFunction)
 	{

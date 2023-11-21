@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Combat.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="jsoncpp.cpp" />
@@ -147,6 +148,10 @@
     <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="WizardCard.txt" />
+    <Text Include="WarriorCard.txt" />
+    <Text Include="ArcherCard.txt" />
+    <Text Include="Characters - Copy.txt" />
     <Text Include="Characters.txt" />
     <Text Include="StoryNotes.txt" />
     <Text Include="Mountain.txt" />
@@ -155,6 +160,7 @@
     <Text Include="Title.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Combat.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
