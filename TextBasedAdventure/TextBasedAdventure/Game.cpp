@@ -115,6 +115,8 @@ void ChangeState(GameState newState)
     }
     case GameState::OpeningCutscene:
     {
+        SaveSystem::SavePlayerData(playerData);
+
         break;
     }
     }
