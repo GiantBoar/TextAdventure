@@ -6,6 +6,7 @@ void SaveSystem::SavePlayerData(PlayerData* data)
 	Json::Value playerData;
 	Json::Value flagMap;
 
+
 	playerData["name"] = data->name;
 
 	for (const auto& kvpair : data->flags)
@@ -15,8 +16,10 @@ void SaveSystem::SavePlayerData(PlayerData* data)
 
 	playerData["flags"] = flagMap;
 
-	playerFile << playerData;
+	playerData["location"] = (int)data->currentLocation;
 
+
+	playerFile << playerData;
 	playerFile.close();
 }
 
@@ -27,18 +30,20 @@ void SaveSystem::LoadPlayerData(PlayerData* data)
 
 	if (!playerFile.good()) return;
 
+
 	playerFile >> playerData;
 
 	data->name = playerData["name"].asString();
 
 	data->flags.clear();
-
 	std::string key;
 	for (int i = 0; i < playerData["keys"].size(); i++)
 	{
 		key = playerData["keys"].getMemberNames()[i];
 		data->flags[key] = playerData["keys"][key].asBool();
 	}
+
+	data->currentLocation = (GameState)playerData["location"].asInt();
 
 	playerFile.close();
 }

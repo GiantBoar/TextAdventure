@@ -20,8 +20,13 @@ extern bool gameRunning;
 // enum for all possible game states
 enum class GameState
 {
+	// menus
 	Title,
-	Credits
+	Credits,
+	Pause,
+
+	// levels
+	OpeningCutscene
 };
 
 void GameLoop();

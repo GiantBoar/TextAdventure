@@ -1,23 +1,27 @@
 #include "Game.h"
 
+#pragma region GameSingletons
 GraphicsHandler* graphics = GraphicsHandler::GetInstance();
 InputHandler* inputs = InputHandler::GetInstance();
 
 SaveSystem::PlayerData* playerData = new SaveSystem::PlayerData();
-
 bool gameRunning = true;
 
-// the current state of the game
-GameState currentState;
+#pragma endregion
+
+// function called each loop, changed depending on the current scene, frequently null
+void (*onLoop)();
 
 #pragma region General Game Functions
-
 void GameLoop()
 {
     inputs->ProcessInput();
 
     graphics->CheckAnimations();
     graphics->CheckRedraw();
+
+    if (onLoop != nullptr)
+        ((void(*)())onLoop)();
 }
 
 void SetupInputs()
@@ -34,7 +38,6 @@ std::clock_t GetTime()
 {
     return std::clock();
 }
-
 #pragma endregion
 
 void EndGame() {
@@ -57,9 +60,11 @@ void ChangeState(GameState newState)
 {
     graphics->Reset();
 
-    currentState = newState;
+    playerData->currentLocation = newState;
 
-    switch (currentState)
+    onLoop = nullptr;
+
+    switch (newState)
     {
     case GameState::Title:
     {
@@ -108,9 +113,14 @@ void ChangeState(GameState newState)
         });
         break;
     }
+    case GameState::OpeningCutscene:
+    {
+        break;
+    }
     }
 }
 
+// the process of choosing 
 void SelectCharacter()
 {
     graphics->Reset();
@@ -136,7 +146,7 @@ void SelectCharacter()
     {
         input = inputs->GetInputString();
 
-        if (input == "ERROR")
+        if (input == "ERROR" || input == "")
         {
             graphics->WarnInputError();
         }
@@ -220,4 +230,6 @@ void SelectCharacter()
     }
 
     playerData->name = name;
+
+    ChangeState(GameState::OpeningCutscene);
 }

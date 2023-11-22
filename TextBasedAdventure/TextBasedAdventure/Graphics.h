@@ -80,7 +80,7 @@ struct Sprite
 
 	Sprite(const char* name, int priority, ScreenCoord position);
 
-	void SetColours(int colour);
+	Sprite* SetColours(int colour);
 
 	virtual void ReadFromFile(const char* fileName);
 	virtual void Draw();
@@ -211,6 +211,7 @@ public:
 
 	void DrawInputBox();
 	void WriteLine(std::string line);
+	void WriteLine(std::string lines[], int lineCount);
 	void DrawWordCache();
 	void ClearWordCache();
 

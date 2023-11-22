@@ -12,6 +12,7 @@
 // forward decleration
 enum class PlayerAttacks;
 enum class PlayerSkills;
+enum class GameState;
 
 namespace SaveSystem
 {
@@ -20,7 +21,7 @@ namespace SaveSystem
 	{
 	public:
 		std::string name;
-		std::string currentLocation;
+		GameState currentLocation;
 
 		std::vector<PlayerAttacks> attacks;
 		std::vector<PlayerSkills> skills;

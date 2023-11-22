@@ -44,7 +44,11 @@ void Sprite::ReadFromFile(const char* fileName)
 }
 
 // update the colour code of the sprite
-void Sprite::SetColours(int colour) { this->colour = colour; }
+Sprite* Sprite::SetColours(int colour) 
+{ 
+	this->colour = colour; 
+	return this; 
+}
 
 
 AnimatedSprite::AnimatedSprite(const char* name, int priority, ScreenCoord position) : Sprite(name, priority, position)
@@ -341,6 +345,17 @@ void GraphicsHandler::WriteLine(std::string line)
 		std::cout << line[i];
 		Sleep(40);
 	}
+}
+
+void GraphicsHandler::WriteLine(std::string lines[], int lineCount)
+{
+	std::string outputString = "";
+	for (int i = 0; i < lineCount; i++)
+	{
+		outputString += lines[i];
+	}
+
+	WriteLine(outputString);
 }
 
 void GraphicsHandler::DrawWordCache()
