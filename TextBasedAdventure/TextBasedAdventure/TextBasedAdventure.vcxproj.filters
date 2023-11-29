@@ -27,86 +27,81 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="Source\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics.cpp">
+    <ClCompile Include="Source\Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="Source\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="Source\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="jsoncpp.cpp">
+    <ClCompile Include="Source\jsoncpp.cpp">
       <Filter>Source Files\Json</Filter>
     </ClCompile>
-    <ClCompile Include="SaveSystem.cpp">
+    <ClCompile Include="Source\SaveSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Combat.cpp">
+    <ClCompile Include="Source\Combat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Title.txt">
+    <Text Include="Resources\Sprites\UI\Title.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="StoryNotes.txt">
+    <Text Include="Resources\Sprites\StoryNotes.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="TitleBG.txt">
+    <Text Include="Resources\Sprites\TitleBG.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Credits.txt">
+    <Text Include="Resources\Sprites\UI\Credits.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Mountain.txt">
+    <Text Include="Resources\Sprites\UI\Mountain.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Characters.txt">
+    <Text Include="Resources\Sprites\Characters - Copy.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Characters - Copy.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="ArcherCard.txt">
+    <Text Include="Resources\Sprites\ArcherCard.txt">
       <Filter>Resource Files\Characters</Filter>
     </Text>
-    <Text Include="WarriorCard.txt">
+    <Text Include="Resources\Sprites\WarriorCard.txt">
       <Filter>Resource Files\Characters</Filter>
     </Text>
-    <Text Include="WizardCard.txt">
+    <Text Include="Resources\Sprites\WizardCard.txt">
       <Filter>Resource Files\Characters</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Graphics.h">
+    <ClInclude Include="Headers\Graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="Headers\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="Headers\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json.h">
+    <ClInclude Include="Headers\Json\json.h">
       <Filter>Header Files\Json</Filter>
     </ClInclude>
-    <ClInclude Include="json-forwards.h">
+    <ClInclude Include="Headers\Json\json-forwards.h">
       <Filter>Header Files\Json</Filter>
     </ClInclude>
-    <ClInclude Include="SaveSystem.h">
+    <ClInclude Include="Headers\SaveSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Combat.h">
+    <ClInclude Include="Headers\Combat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="player.json">
-      <Filter>Resource Files\Json</Filter>
-    </None>
+    <ClInclude Include="Headers\ResourcePath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

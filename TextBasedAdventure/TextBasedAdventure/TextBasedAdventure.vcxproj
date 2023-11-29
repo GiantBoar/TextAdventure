@@ -78,6 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,37 +140,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Combat.cpp" />
-    <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="jsoncpp.cpp" />
-    <ClCompile Include="SaveSystem.cpp" />
-    <ClCompile Include="Source.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Source\Combat.cpp" />
+    <ClCompile Include="Source\Graphics.cpp" />
+    <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\jsoncpp.cpp" />
+    <ClCompile Include="Source\SaveSystem.cpp" />
+    <ClCompile Include="Source\Source.cpp" />
+    <ClCompile Include="Source\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="WizardCard.txt" />
-    <Text Include="WarriorCard.txt" />
-    <Text Include="ArcherCard.txt" />
-    <Text Include="Characters - Copy.txt" />
-    <Text Include="Characters.txt" />
-    <Text Include="StoryNotes.txt" />
-    <Text Include="Mountain.txt" />
-    <Text Include="TitleBG.txt" />
-    <Text Include="Credits.txt" />
-    <Text Include="Title.txt" />
+    <Text Include="Resources\Sprites\WizardCard.txt" />
+    <Text Include="Resources\Sprites\WarriorCard.txt" />
+    <Text Include="Resources\Sprites\ArcherCard.txt" />
+    <Text Include="Resources\Sprites\Characters - Copy.txt" />
+    <Text Include="Resources\Sprites\StoryNotes.txt" />
+    <Text Include="Resources\Sprites\UI\Mountain.txt" />
+    <Text Include="Resources\Sprites\TitleBG.txt" />
+    <Text Include="Resources\Sprites\UI\Credits.txt" />
+    <Text Include="Resources\Sprites\UI\Title.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Combat.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="json-forwards.h" />
-    <ClInclude Include="json.h" />
-    <ClInclude Include="SaveSystem.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="player.json" />
+    <ClInclude Include="Headers\Combat.h" />
+    <ClInclude Include="Headers\Game.h" />
+    <ClInclude Include="Headers\Graphics.h" />
+    <ClInclude Include="Headers\Input.h" />
+    <ClInclude Include="Headers\Json\json-forwards.h" />
+    <ClInclude Include="Headers\Json\json.h" />
+    <ClInclude Include="Headers\ResourcePath.h" />
+    <ClInclude Include="Headers\SaveSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -28,3 +28,4 @@ the shrine - pray and dialogue with the god, you get one final wish
 To Do:
 - Double Buffer
 - make it so you cant resize
+- redo character cards to be tarot cards

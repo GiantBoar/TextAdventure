@@ -1,14 +1,7 @@
-#include "Game.h"
+#include "../Headers/Game.h"
+#include "../Headers/ResourcePath.h"
 
-void WriteLine(std::string line, int pause)
-{
-    for (int i = 0; i < line.length(); i++)
-    {
-        std::cout << line[i];
-        Sleep(30);
-    }
-    Sleep(pause);
-}
+std::string ResourcePath(std::string name) { return resourceDirectory + name; }
 
 int main()
 {

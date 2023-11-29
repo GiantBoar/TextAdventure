@@ -7,6 +7,7 @@
 #include <iostream>
 #include <windows.h>
 #include <string>
+#include "ResourcePath.h";
 
 // some definitions of colour codes I use so that I dont have to remember them or take up space in memory
 #pragma region Colour Definitions
@@ -29,7 +30,7 @@
 #define COLOUR_GREY COLOUR_BRIGHT(COLOUR_BLACK)
 #pragma endregion
 
-#define WORDCACHESIZE 5
+#define WORDCACHESIZE 8
 
 enum class GameState;
 
@@ -75,14 +76,15 @@ struct Sprite
 	short colour = 0;
 
 	short length = 0, height = 0;
+	bool centreX, centreY;
 
 	ScreenCoord position;
 
-	Sprite(const char* name, int priority, ScreenCoord position);
+	Sprite(std::string name, int priority, ScreenCoord position, bool centreX = false, bool centreY = false);
 
 	Sprite* SetColours(int colour);
 
-	virtual void ReadFromFile(const char* fileName);
+	virtual void ReadFromFile(std::string fileName);
 	virtual void Draw();
 };
 
@@ -101,18 +103,19 @@ struct AnimatedSprite : Sprite
 	std::string currentAnimation = "MAIN";
 	unsigned short currentFrame = 0;
 
-	AnimatedSprite(const char* name, int priority, ScreenCoord position);
+	AnimatedSprite(std::string name, int priority, ScreenCoord position, bool centreX = false, bool centreY = false);
 
 	void PlayAnimation(std::string animation);
 	void Draw() override;
 
-	void ReadFromFile(const char* fileName) override;
+	void ReadFromFile(std::string fileName) override;
 };
 
 namespace UI
 {
 	class Label
 	{
+	public:
 		ScreenCoord position;
 		bool centreAligned;
 		std::string text;
@@ -171,6 +174,8 @@ public:
 	std::vector<UI::Button> buttons;
 	int selectedButtonIndex;
 
+	std::vector<UI::Label> labels;
+
 	ScreenCoord windowSize;
 	bool changed = false;
 
@@ -188,6 +193,7 @@ public:
 
 	// graphics-related functions
 	void Draw();
+	void DrawUI();
 	void Redraw();
 	bool CheckRedraw();
 	void ClearScreen();
@@ -195,23 +201,23 @@ public:
 
 	void CheckAnimations();
 
-	void WarnInputError();
-
 	Sprite* GetSprite(std::string name);
 
-	Sprite* LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position);
-	Sprite* LoadAnimation(const char* name, const char* fileName, int priority, ScreenCoord position);
+	Sprite* LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position, bool centreX = false, bool centreY = false);
+	Sprite* LoadAnimation(std::string name, std::string fileName, int priority, ScreenCoord position, bool centreX = false, bool centreY = false);
 	void SortSprites();
 
 	ScreenCoord GetWindowCentre();
 
+	void AddLabel(UI::Label label);
 	void OrganiseButtons(ScreenCoord position, ScreenCoord spacing, std::vector<UI::Button> buttons);
 	void ChangeSelection(int selection);
 	void Interact();
+	void WarnInputError();
 
 	void DrawInputBox();
 	void WriteLine(std::string line);
-	void WriteLine(std::string lines[], int lineCount);
+	void WriteLines(std::string lines[], int lineNum, int linePause);
 	void DrawWordCache();
 	void ClearWordCache();
 

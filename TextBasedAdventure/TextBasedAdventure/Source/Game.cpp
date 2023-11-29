@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../Headers/Game.h"
 
 #pragma region GameSingletons
 GraphicsHandler* graphics = GraphicsHandler::GetInstance();
@@ -46,7 +46,8 @@ void EndGame() {
 
 void ContinueGame() 
 {
-
+    SaveSystem::LoadPlayerData(playerData);
+    ChangeState(playerData->currentLocation);
 }
 
 
@@ -60,21 +61,19 @@ void ChangeState(GameState newState)
 {
     graphics->Reset();
 
-    playerData->currentLocation = newState;
-
     onLoop = nullptr;
 
     switch (newState)
     {
+        // just the basic title scene with the background and title image and menu buttons.
     case GameState::Title:
     {
         graphics->state = GraphicsState::MENU;
 
-        Sprite* title = graphics->LoadSprite("Title", "Title.txt", 1, ScreenCoord(1, 1));
-        title->position = ScreenCoord((graphics->windowSize.X - title->length) / 2, 4);
+        Sprite* title = graphics->LoadSprite("Title", "UI/Title.txt", 1, graphics->GetWindowCentre() - ScreenCoord(0, 4), true, true);
         title->SetColours(COLOUR_BRIGHT(COLOUR_CYAN));
 
-        Sprite* bg = graphics->LoadAnimation("Background", "Mountain.txt", 0, ScreenCoord(1, 1));
+        Sprite* bg = graphics->LoadAnimation("Background", "UI/Mountain.txt", 0, ScreenCoord(1, 1));
         bg->SetColours(COLOUR_BRIGHT(COLOUR_BLACK));
 
         // displays 'continue' button if you can load the save
@@ -105,8 +104,7 @@ void ChangeState(GameState newState)
 
         graphics->Reset();
 
-        Sprite* credits = graphics->LoadSprite("Credits", "Credits.txt", 1, ScreenCoord(1, 1));
-        credits->position = graphics->GetWindowCentre() - (ScreenCoord(credits->length, credits->height) / 2);
+        Sprite* credits = graphics->LoadSprite("Credits", "UI/Credits.txt", 1, graphics->GetWindowCentre(), true, true);
 
         graphics->OrganiseButtons(ScreenCoord(credits->position.X, 22), ScreenCoord(0, 0), std::vector<UI::Button>{
             UI::Button(ScreenCoord(1, 1), " - Exit - ", false, GameState::Title)
@@ -115,6 +113,34 @@ void ChangeState(GameState newState)
     }
     case GameState::OpeningCutscene:
     {
+        playerData->currentLocation = GameState::OpeningCutscene;
+        SaveSystem::SavePlayerData(playerData);
+
+        graphics->state = GraphicsState::TEXT;
+
+        std::string lines[] = {
+            "@1000 Far east, @200 a small town sits against the stubborn country rock.",
+            "The people pray at a small alter, @200 past the border of the forest and shaded by tall dark trees,",
+            "and their humble god churns the earth and rewards their worship with plump carrots and fresh water.",
+            "The simple town breathed, @250 and the simple people lived and died and buried their dead.",
+            "But one day @100 from a tall wooden tower on the border of the village, @200 smoke was sighted,",
+            "smoke that writhed @100 and wriggled @100 and fought the sky for dominance.",
+            "When the smoke reached the town, @200 the source trudged forwards,",
+            "a " + GraphicsHandler::ColourString("Rider", COLOUR_RED) + ", clad in soot black armor that billowed thick smoke at every seam,",
+            "mounted upon a bony, @150 scarred horse, @150 who's hooves cracked and splintered the earth beneath them.",
+            "The town's strongest, @250 it's fathers, @100 and mothers, @100 and workers @100 all met the rider at the entrance to the town.",
+            "In a flash of heat and a heave of it's great, @150 black @150 blade, @250 the rider carved its path through,",
+            "rending arm from shoulder, @200 hips from chest.",
+            "The rider continued through the town, @240 leaving charred earth and pollution in its stead.",
+            "Their humble shrine, @150 made from wood @150 and whalebone @150 and heaped up shale @100 was no match,",
+            "and for what was left of the town, @200 no god churned their soil @100 and gifted them water.",
+            "Through their stubborn country rock carved a deep, " + GraphicsHandler::ColourString("rotten", COLOUR_GREEN) + " passage into the land beyond.",
+            "A young soldier arose, @150 born from the town and newly orphaned in the rider's wake, @150 atop an old horse, @150 cut loose and mounted from a toppled trading wagon.",
+            GraphicsHandler::ColourString(playerData->name, COLOUR_BRIGHT(COLOUR_PURPLE)) + " followed the rider's passage, both of you in search of " + GraphicsHandler::ColourString("The Mountain", COLOUR_BRIGHT(COLOUR_CYAN))
+        };
+
+        graphics->WriteLines(lines, sizeof(lines) / sizeof(lines[0]), 400);
+
         break;
     }
     }
@@ -135,6 +161,8 @@ void SelectCharacter()
     graphics->LoadSprite("warrior", "WarriorCard.txt", 1, ScreenCoord(3, 3));
     graphics->LoadSprite("wizard", "WizardCard.txt", 1, ScreenCoord(42, 3));
     graphics->LoadSprite("archer", "ArcherCard.txt", 1, ScreenCoord(81, 3));
+
+    graphics->AddLabel(UI::Label("~ Choose a Character ~", graphics->GetWindowCentre() - ScreenCoord(0, 13), true));
 
     graphics->Redraw();
 

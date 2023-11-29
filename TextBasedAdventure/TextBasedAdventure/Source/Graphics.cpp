@@ -1,14 +1,17 @@
-#include "Graphics.h"
+#include "../Headers/Graphics.h"
 
 
 #pragma region Sprites
 
 // sprite constructor
-Sprite::Sprite(const char* name, int priority, ScreenCoord position)
+Sprite::Sprite(std::string name, int priority, ScreenCoord position, bool centreX, bool centreY)
 {
 	this->name = name;
 	this->position = position;
 	sortPriority = priority;
+
+	this->centreX = centreX;
+	this->centreY = centreY;
 }
 
 // draw the sprite
@@ -21,11 +24,11 @@ void Sprite::Draw()
 }
 
 // reads the lines from a file into a vector to be outputted later on
-void Sprite::ReadFromFile(const char* fileName)
+void Sprite::ReadFromFile(std::string fileName)
 {
 	spriteLines = std::vector<std::string>();
 
-	std::ifstream file(fileName);
+	std::ifstream file(ResourcePath("Sprites/" + fileName));
 	std::string s;
 
 	int lineCount = 0;
@@ -41,6 +44,9 @@ void Sprite::ReadFromFile(const char* fileName)
 	}
 
 	if (height == 0 || lineCount > height) height = lineCount;
+
+	if (centreX) position.X -= spriteLines[0].length() / 2;
+	if (centreY) position.Y -= height / 2;
 }
 
 // update the colour code of the sprite
@@ -51,7 +57,7 @@ Sprite* Sprite::SetColours(int colour)
 }
 
 
-AnimatedSprite::AnimatedSprite(const char* name, int priority, ScreenCoord position) : Sprite(name, priority, position)
+AnimatedSprite::AnimatedSprite(std::string name, int priority, ScreenCoord position, bool centreX, bool centreY) : Sprite(name, priority, position, centreX, centreY)
 {
 	this->name = name;
 	this->position = position;
@@ -66,11 +72,11 @@ void AnimatedSprite::Draw()
 	}
 }
 
-void AnimatedSprite::ReadFromFile(const char* fileName)
+void AnimatedSprite::ReadFromFile(std::string fileName)
 {
 	animations = std::unordered_map<std::string, Animation>();
 
-	std::ifstream file(fileName);
+	std::ifstream file(ResourcePath("Sprites/" + fileName));
 	std::string s, animName;
 	animName = "MAIN";
 	int frame = 0;
@@ -111,6 +117,9 @@ void AnimatedSprite::ReadFromFile(const char* fileName)
 	}
 
 	if (height == 0 || lineCount > height) height = lineCount;
+
+	if (centreX) position.X -= animations[animName].frames[0][0].length() / 2;
+	if (centreY) position.Y -= height / 2;
 }
 
 void AnimatedSprite::PlayAnimation(std::string name)
@@ -178,19 +187,19 @@ void GraphicsHandler::SortSprites()
 }
 
 // loads a sprite from a file and allocates to the heap
-Sprite* GraphicsHandler::LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position)
+Sprite* GraphicsHandler::LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position, bool centreX, bool centreY)
 {
-	Sprite* sprite = new Sprite(name.c_str(), priority, position);
-	sprite->ReadFromFile(fileName.c_str());
+	Sprite* sprite = new Sprite(name.c_str(), priority, position, centreX, centreY);
+	sprite->ReadFromFile(fileName);
 
 	sprites.push_back(sprite);
 	return (sprites[sprites.size() - 1]);
 }
 
 // loads an animation from a file and allocates it to the heap
-Sprite* GraphicsHandler::LoadAnimation(const char* name, const char* fileName, int priority, ScreenCoord position)
+Sprite* GraphicsHandler::LoadAnimation(std::string name, std::string fileName, int priority, ScreenCoord position, bool centreX, bool centreY)
 {
-	AnimatedSprite* sprite = new AnimatedSprite(name, priority, position);
+	AnimatedSprite* sprite = new AnimatedSprite(name, priority, position, centreX, centreY);
 	sprite->ReadFromFile(fileName);
 
 	sprites.push_back(sprite);
@@ -250,10 +259,7 @@ void GraphicsHandler::Draw()
 			sprites[i]->Draw();
 		}
 
-		for (int i = 0; i < buttons.size(); i++)
-		{
-			buttons[i].Draw();
-		}
+		DrawUI();
 
 		printf("\033[%d;%dH", windowSize.Y, windowSize.X);
 
@@ -264,6 +270,8 @@ void GraphicsHandler::Draw()
 		{
 			sprites[i]->Draw();
 		}
+
+		DrawUI();
 
 		DrawWordCache();
 
@@ -276,9 +284,23 @@ void GraphicsHandler::Draw()
 			sprites[i]->Draw();
 		}
 
+		DrawUI();
+
 		DrawInputBox();
 
 		break;
+	}
+}
+
+void GraphicsHandler::DrawUI()
+{
+	for (int i = 0; i < buttons.size(); i++)
+	{
+		buttons[i].Draw();
+	}
+	for (int i = 0; i < labels.size(); i++)
+	{
+		labels[i].Draw();
 	}
 }
 
@@ -312,6 +334,7 @@ void GraphicsHandler::Reset()
 
 	sprites.clear();
 	buttons.clear();
+	labels.clear();
 
 	selectedButtonIndex = 0;
 
@@ -333,29 +356,62 @@ void GraphicsHandler::WriteLine(std::string line)
 {
 	lastCacheIndex = (lastCacheIndex + 1) % WORDCACHESIZE;
 	textCache[lastCacheIndex] = "";
-
 	Redraw();
+
+	std::string currentWord = "";
 
 	DrawWordCache();
 
-	textCache[lastCacheIndex] = line;
-
 	for (int i = 0; i < line.length(); i++)
 	{
+		if (textCache[lastCacheIndex].length() + currentWord.length() >= windowSize.X - 2)
+		{
+			lastCacheIndex = (lastCacheIndex + 1) % WORDCACHESIZE;
+			textCache[lastCacheIndex] = "";
+			Redraw();
+			DrawWordCache();
+			std::cout << currentWord;
+		}
+
+		if (line[i] == '@')
+		{
+			std::string pauseArg = "";
+
+			i++;
+			while (i < line.length() && line[i] != ' ')
+			{
+				pauseArg.push_back(line[i]);
+				if (!std::isdigit(line[i])) break;
+				i++;
+			}
+
+			if(pauseArg != "") Sleep(std::stoi(pauseArg));
+			continue;
+		}
+
+		currentWord.push_back(line[i]);
+
+		if (line[i] == ' ')
+		{
+			textCache[lastCacheIndex] += currentWord;
+			currentWord = "";
+		}
+
 		std::cout << line[i];
-		Sleep(40);
+		Sleep(50);
 	}
+
+	if(currentWord.length() != 0) textCache[lastCacheIndex] += currentWord;
 }
 
-void GraphicsHandler::WriteLine(std::string lines[], int lineCount)
+void GraphicsHandler::WriteLines(std::string lines[], int lineNum, int linePause)
 {
-	std::string outputString = "";
-	for (int i = 0; i < lineCount; i++)
+	for (int i = 0; i < lineNum; i++)
 	{
-		outputString += lines[i];
-	}
+		WriteLine(lines[i]);
 
-	WriteLine(outputString);
+		Sleep(linePause);
+	}
 }
 
 void GraphicsHandler::DrawWordCache()
@@ -386,6 +442,11 @@ std::string GraphicsHandler::ColourString(std::string str, int colour) { return 
 // CHANGE THIS -> since it can be the only buttons that exist it should be Make Buttons or something, and should have horizontal alignment
 //
 
+void GraphicsHandler::AddLabel(UI::Label label)
+{
+	labels.push_back(label);
+}
+
 void GraphicsHandler::OrganiseButtons(ScreenCoord position, ScreenCoord spacing, std::vector<UI::Button> buttons)
 {
 	if (this->buttons.size() != 0) return; // shouldn't organise a new array of buttons if buttons already exist, cause it will mess with the selection and interaction system
@@ -413,7 +474,7 @@ void GraphicsHandler::ChangeSelection(int selection)
 	buttons[selectedButtonIndex].selected = false;
 	selectedButtonIndex += selection;
 
-	selectedButtonIndex = ((size_t)selectedButtonIndex + buttons.size()) % buttons.size();
+	selectedButtonIndex = (int)((selectedButtonIndex + buttons.size()) % buttons.size());
 
 	buttons[selectedButtonIndex].selected = true;
 

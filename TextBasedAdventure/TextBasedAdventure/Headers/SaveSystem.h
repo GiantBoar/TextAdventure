@@ -2,12 +2,12 @@
 
 #define JSON_IS_AMALGAMATION
 
-#include "json.h"
-#include "json-forwards.h"
-
 #include <fstream>
 #include <iostream>
 #include <map>
+
+#include "Json/json.h"
+#include "Json/json-forwards.h"
 
 // forward decleration
 enum class PlayerAttacks;
@@ -21,7 +21,7 @@ namespace SaveSystem
 	{
 	public:
 		std::string name;
-		GameState currentLocation;
+		GameState currentLocation = (GameState)0;
 
 		std::vector<PlayerAttacks> attacks;
 		std::vector<PlayerSkills> skills;
