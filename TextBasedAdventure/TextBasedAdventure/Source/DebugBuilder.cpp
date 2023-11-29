@@ -30,6 +30,9 @@ void SaveDialogueTree(DialogueTree* tree, std::string fileName)
 	for (int i = 0; i < tree->tree.size(); i++)
 	{
 		node = tree->tree[i];
+		
+		branch = Json::Value();
+		option = Json::Value();
 
 		branch["ID"] = node.id;
 		branch["dialogue"] = node.dialogue;
