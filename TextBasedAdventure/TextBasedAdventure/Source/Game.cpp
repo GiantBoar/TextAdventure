@@ -118,6 +118,8 @@ void ChangeState(GameState newState)
 
         graphics->state = GraphicsState::TEXT;
 
+        //graphics->LoadSprite("portrait", "Portraits/Template.txt", 1, ScreenCoord(graphics->GetWindowCentre().X, 2), true, false);
+
         std::string lines[] = {
             "@1000 Far east, @200 a small town sits against the stubborn country rock.",
             "The people pray at a small alter, @200 past the border of the forest and shaded by tall dark trees,",

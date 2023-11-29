@@ -141,6 +141,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Combat.cpp" />
+    <ClCompile Include="Source\DebugBuilder.cpp" />
+    <ClCompile Include="Source\Dialogue.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\jsoncpp.cpp" />
@@ -149,6 +151,8 @@
     <ClCompile Include="Source\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Resources\Sprites\Portraits\Map.txt" />
+    <Text Include="Resources\Sprites\Portraits\Template.txt" />
     <Text Include="Resources\Sprites\WizardCard.txt" />
     <Text Include="Resources\Sprites\WarriorCard.txt" />
     <Text Include="Resources\Sprites\ArcherCard.txt" />
@@ -161,6 +165,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Combat.h" />
+    <ClInclude Include="Headers\DebugBuilder.h" />
+    <ClInclude Include="Headers\Dialogue.h" />
     <ClInclude Include="Headers\Game.h" />
     <ClInclude Include="Headers\Graphics.h" />
     <ClInclude Include="Headers\Input.h" />

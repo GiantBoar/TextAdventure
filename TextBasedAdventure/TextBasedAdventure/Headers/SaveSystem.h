@@ -9,6 +9,8 @@
 #include "Json/json.h"
 #include "Json/json-forwards.h"
 
+#include "ResourcePath.h"
+
 // forward decleration
 enum class PlayerAttacks;
 enum class PlayerSkills;

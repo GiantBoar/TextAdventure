@@ -48,6 +48,12 @@
     <ClCompile Include="Source\Combat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DebugBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dialogue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Sprites\UI\Title.txt">
@@ -77,6 +83,8 @@
     <Text Include="Resources\Sprites\WizardCard.txt">
       <Filter>Resource Files\Characters</Filter>
     </Text>
+    <Text Include="Resources\Sprites\Portraits\Map.txt" />
+    <Text Include="Resources\Sprites\Portraits\Template.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Graphics.h">
@@ -101,6 +109,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\ResourcePath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\DebugBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Dialogue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

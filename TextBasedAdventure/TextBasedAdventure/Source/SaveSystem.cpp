@@ -1,8 +1,8 @@
-#include "../Headers/SaveSystem.h"
+#include "../Headers/SaveSystem.h"\
 
 void SaveSystem::SavePlayerData(PlayerData* data)
 {
-	std::ofstream playerFile("player.json", std::ofstream::binary | std::ofstream::trunc);
+	std::ofstream playerFile(ResourcePath("player.json"), std::ofstream::binary | std::ofstream::trunc);
 	Json::Value playerData;
 	Json::Value flagMap;
 
@@ -25,7 +25,7 @@ void SaveSystem::SavePlayerData(PlayerData* data)
 
 void SaveSystem::LoadPlayerData(PlayerData* data)
 {
-	std::ifstream playerFile("player.json", std::ifstream::binary);
+	std::ifstream playerFile(ResourcePath("player.json"), std::ifstream::binary);
 	Json::Value playerData;
 
 	if (!playerFile.good()) return;
@@ -50,7 +50,7 @@ void SaveSystem::LoadPlayerData(PlayerData* data)
 
 bool SaveSystem::CanLoadSave()
 {
-	std::ifstream playerFile("player.json");
+	std::ifstream playerFile(ResourcePath("player.json"));
 	bool good = playerFile.good();
 	playerFile.close();
 	return good;
