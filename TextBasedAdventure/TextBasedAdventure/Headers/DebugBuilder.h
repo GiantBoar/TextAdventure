@@ -13,4 +13,5 @@
 namespace Debug
 {
 	void MakeDialogueTree();
+	void EditDialogueTree();
 }

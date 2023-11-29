@@ -13,10 +13,7 @@ int CreateNode(DialogueTree* tree, int rootID)
 	std::getline(std::cin, dialogue);
 
 	int id = GetID();
-	DialogueNode newNode(dialogue, id, rootID);
-	newNode.options = std::vector<int>();
-
-	tree->tree.push_back(newNode);
+	tree->tree.push_back(DialogueNode(dialogue, id, rootID));
 	tree->IDIndex.insert({ id, tree->tree.size() - 1 });
 
 	return id;
@@ -28,6 +25,8 @@ void SaveDialogueTree(DialogueTree* tree, std::string fileName)
 	Json::Value data, branch, option;
 	DialogueNode node;
 
+	if (!dialogueFile.good()) printf(" but something went wrong!");
+
 	for (int i = 0; i < tree->tree.size(); i++)
 	{
 		node = tree->tree[i];
@@ -38,8 +37,8 @@ void SaveDialogueTree(DialogueTree* tree, std::string fileName)
 
 		for (int j = 0; j < node.options.size(); j++)
 		{
-			//option["ID"] = node.options[j].nextID;
-			//option["dialogue"] = node.options[j].dialogue;
+			option["ID"] = node.options[j].first;
+			option["dialogue"] = node.options[j].second;
 			branch["options"][j] = option;
 		}
 
@@ -51,27 +50,17 @@ void SaveDialogueTree(DialogueTree* tree, std::string fileName)
 	dialogueFile.close();
 }
 
-void Debug::MakeDialogueTree()
+void DialogueTreeCommand(DialogueTree* tree, std::string treeName)
 {
-	system("cls");
-
-	std::cout << "name dialogue tree\n> ";
-	std::string treeName;
-	std::getline(std::cin, treeName);
-	treeName += ".json";
-
-	DialogueTree tree = DialogueTree();
+	int currentNodeID = tree->tree[0].id;
 
 	std::string command;
-	int currentNodeID = -1;
-
-	currentNodeID = CreateNode(&tree, -1);
 
 	while (true)
 	{
 		system("cls");
 
-		DialogueNode* node = tree.GetNode(currentNodeID);
+		DialogueNode* node = tree->GetNode(currentNodeID);
 
 		printf("input edit command for tree %s\ncurrent node: %d root node: %d \ndialogue: %s\noptions: %s\n> ", treeName.c_str(), currentNodeID, node->rootNodeID, node->dialogue.c_str(), node->OptionsList().c_str());
 		std::getline(std::cin, command);
@@ -92,15 +81,9 @@ void Debug::MakeDialogueTree()
 			std::string optionText;
 			std::getline(std::cin, optionText);
 
-			currentNodeID = CreateNode(&tree, lastDialogueID);
+			currentNodeID = CreateNode(tree, lastDialogueID);
 
-			DialogueOption newOption(lastDialogueID, optionText);
-
-			//if (node->options.size() == 0) node->options = std::vector<DialogueOption>();
-
-			//node->options.push_back(newOption);\
-
-			node->options.push_back(lastDialogueID);
+			tree->GetNode(lastDialogueID)->options.push_back({ currentNodeID, optionText });
 		}
 		else if (command == "back")
 		{
@@ -110,7 +93,7 @@ void Debug::MakeDialogueTree()
 				Sleep(500);
 				continue;
 			}
-				
+
 			currentNodeID = node->rootNodeID;
 		}
 		else if (command == "edit")
@@ -123,9 +106,74 @@ void Debug::MakeDialogueTree()
 		}
 		else if (command == "save")
 		{
-			SaveDialogueTree(&tree, treeName);
+			SaveDialogueTree(tree, treeName);
+		}
+		else if (command == "root")
+		{
+			while (node->rootNodeID != -1)
+			{
+				node = tree->GetNode(node->rootNodeID);
+			}
+		}
+		else if (command.substr(0, 6) == "choose")
+		{
+			std::string option = command.substr(7, 8);
+
+			if (!std::isdigit(option[0])) continue;
+
+			int f = std::stoi(option);
+
+			if (f >= node->options.size()) continue;
+
+			currentNodeID = node->options[f].first;
+			std::cout << node->options[f].first;
+			Sleep(1000);
 		}
 	}
+}
 
-	SaveDialogueTree(&tree, treeName);
+void Debug::MakeDialogueTree()
+{
+	system("cls");
+
+	std::cout << "name dialogue tree\n> ";
+	std::string treeName;
+	std::getline(std::cin, treeName);
+	treeName += ".json";
+
+	DialogueTree tree = DialogueTree();
+	CreateNode(&tree, -1);
+
+	DialogueTreeCommand(&tree, treeName);
+}
+
+void Debug::EditDialogueTree()
+{
+	DialogueTree t = DialogueTree();
+	std::string filename;
+
+	while (true)
+	{
+		system("cls");
+		std::cout << "what is the name of your file!\n> ";
+		std::getline(std::cin, filename);
+
+		std::ifstream dialogueFile(ResourcePath("Dialogue/" + filename), std::ifstream::binary);
+		if (!dialogueFile.good())
+		{
+			std::cout << "file does not exist!";
+			dialogueFile.close();
+
+			Sleep(1000);
+			continue;
+		}
+
+		dialogueFile.close();
+
+		t.LoadDialogueTree(filename);
+
+		break;
+	}
+
+	DialogueTreeCommand(&t, filename);
 }

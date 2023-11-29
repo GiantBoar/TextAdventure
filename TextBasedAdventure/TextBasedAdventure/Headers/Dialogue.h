@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <fstream>
 
-// delte
+// delete
 #include <iostream>
 #include <Windows.h>
 
@@ -16,12 +16,10 @@ struct DialogueNode
 {
 	int id, rootNodeID;
 	std::string dialogue;
-	std::vector<int> options;
+	std::vector<std::pair<int, std::string>> options;
 
 	DialogueNode(std::string dialogue, int ID, int rootID);
 	DialogueNode();
-
-	void AddOption(int o);
 
 	std::string OptionsList();
 };

@@ -1,0 +1,26 @@
+[
+	{
+		"ID" : 1,
+		"dialogue" : "Come join me. Fire's warm",
+		"options" : 
+		[
+			{
+				"ID" : 2,
+				"dialogue" : "*sit down*"
+			}
+		],
+		"rootID" : -1
+	},
+	{
+		"ID" : 2,
+		"dialogue" : "Where're you coming from?",
+		"options" : 
+		[
+			{
+				"ID" : 2,
+				"dialogue" : "*sit down*"
+			}
+		],
+		"rootID" : 1
+	}
+]

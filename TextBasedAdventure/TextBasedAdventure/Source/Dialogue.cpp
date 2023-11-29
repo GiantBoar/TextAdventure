@@ -3,6 +3,7 @@
 void DialogueTree::LoadDialogueTree(std::string fileName)
 {
 	std::ifstream dialogueFile(ResourcePath("Dialogue/" + fileName), std::ifstream::binary);
+
 	Json::Value data;
 
 	if (!dialogueFile.good()) return;
@@ -24,7 +25,9 @@ void DialogueTree::LoadDialogueTree(std::string fileName)
 		for (int j = 0; j < optionsNum; j++)
 		{
 			option = data[i]["options"][j];
-			//GetNode(currentNodeID)->options.push_back({ option["ID"].asInt(), option["dialogue"].asString() });
+			std::cout << option["ID"].asInt() << std::endl;
+			Sleep(2000);
+			GetNode(currentNodeID)->options.push_back({ option["ID"].asInt(), option["dialogue"].asString() });
 		}
 	}
 
@@ -37,32 +40,28 @@ DialogueNode::DialogueNode(std::string dialogue, int id, int rootID)
 	this->id = id;
 	this->rootNodeID = rootID;
 
-	options = std::vector<int>();
+	options = std::vector<std::pair<int, std::string>>();
 }
 DialogueNode::DialogueNode()
 {
 	this->dialogue = "EMPTY";
 	this->id = -10;
 	this->rootNodeID = -10;
-}
 
-void DialogueNode::AddOption(int o)
-{
-	options.push_back(o);
+	options = std::vector<std::pair<int, std::string>>();
 }
 
 std::string DialogueNode::OptionsList()
 {
 	std::string s = "";
 
-	printf("size of thing is %d DONT TEST ME", options.size());
-
 	for (int i = 0; i < options.size(); i++)
 	{
-		//s += options[i].dialogue;
+		s += options[i].second;
 
 		if (i != options.size() - 1) s += ", ";
 	}
+
 	return s;
 }
 

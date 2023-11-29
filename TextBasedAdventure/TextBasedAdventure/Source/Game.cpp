@@ -10,17 +10,16 @@ bool gameRunning = true;
 #pragma endregion
 
 #if DEBUG_BUILD
-void MakeDialogueTree()
-{
-    Debug::MakeDialogueTree();
-}
+void MakeDialogueTree() { Debug::MakeDialogueTree(); }
+void EditDialogueTree() { Debug::EditDialogueTree(); }
 
 void OpenDebugMenu()
 {
     graphics->Reset();
 
     graphics->OrganiseButtons(graphics->GetWindowCentre(), ScreenCoord(0, 2), std::vector<UI::Button> {
-        UI::Button(ScreenCoord(1, 1), " Create Dialogue Tree ", true, MakeDialogueTree)
+        UI::Button(ScreenCoord(1, 1), " Create Dialogue Tree ", true, MakeDialogueTree),
+            UI::Button(ScreenCoord(1, 1), " Edit Dialogue Tree ", true, EditDialogueTree)
     });
 }
 #endif
