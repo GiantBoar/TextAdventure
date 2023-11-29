@@ -9,6 +9,22 @@ bool gameRunning = true;
 
 #pragma endregion
 
+#if DEBUG_BUILD
+void MakeDialogueTree()
+{
+    Debug::MakeDialogueTree();
+}
+
+void OpenDebugMenu()
+{
+    graphics->Reset();
+
+    graphics->OrganiseButtons(graphics->GetWindowCentre(), ScreenCoord(0, 2), std::vector<UI::Button> {
+        UI::Button(ScreenCoord(1, 1), " Create Dialogue Tree ", true, MakeDialogueTree)
+    });
+}
+#endif
+
 // function called each loop, changed depending on the current scene, frequently null
 void (*onLoop)();
 
@@ -76,6 +92,15 @@ void ChangeState(GameState newState)
         Sprite* bg = graphics->LoadAnimation("Background", "UI/Mountain.txt", 0, ScreenCoord(1, 1));
         bg->SetColours(COLOUR_BRIGHT(COLOUR_BLACK));
 
+#if DEBUG_BUILD
+        graphics->OrganiseButtons(graphics->GetWindowCentre() + ScreenCoord(0, 6), ScreenCoord(0, 2), std::vector<UI::Button> {
+            UI::Button(ScreenCoord(1, 1), " - New Game - ", true, SelectCharacter),
+                UI::Button(ScreenCoord(1, 1), " - Continue - ", true, (SaveSystem::CanLoadSave()) ? ContinueGame : nullptr),
+                UI::Button(ScreenCoord(1, 1), " - Credits - ", true, GameState::Credits),
+                UI::Button(ScreenCoord(1, 1), " - Exit - ", true, EndGame),
+                UI::Button(ScreenCoord(1, 1), " ~ DEBUG ~ ", true, OpenDebugMenu)
+    });
+#else
         // displays 'continue' button if you can load the save
         if (SaveSystem::CanLoadSave())
         {
@@ -83,7 +108,7 @@ void ChangeState(GameState newState)
                 UI::Button(ScreenCoord(1, 1), " - New Game - ", true, SelectCharacter),
                     UI::Button(ScreenCoord(1, 1), " - Continue - ", true, ContinueGame),
                     UI::Button(ScreenCoord(1, 1), " - Credits - ", true, GameState::Credits),
-                    UI::Button(ScreenCoord(1, 1), " - Exit - ", true, EndGame)
+                    UI::Button(ScreenCoord(1, 1), " - Exit - ", true, EndGame),
             });
         }
         else
@@ -94,6 +119,7 @@ void ChangeState(GameState newState)
                     UI::Button(ScreenCoord(1, 1), " - Exit - ", true, EndGame)
             });
         }
+#endif
 
         graphics->SortSprites();
         break;

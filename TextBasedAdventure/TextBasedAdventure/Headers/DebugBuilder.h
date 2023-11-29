@@ -10,4 +10,7 @@
 #include "Json/json-forwards.h"
 #include "ResourcePath.h"
 
-void MakeDialogueTree();
+namespace Debug
+{
+	void MakeDialogueTree();
+}

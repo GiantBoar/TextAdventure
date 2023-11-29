@@ -10,6 +10,12 @@
 #include "SaveSystem.h"
 #include "Combat.h"
 
+#define DEBUG_BUILD true
+
+#if DEBUG_BUILD
+#include "DebugBuilder.h"
+#endif
+
 extern class GraphicsHandler* graphics;
 extern class InputHandler* inputs;
 
