@@ -51,6 +51,7 @@ public:
 
 	std::string GetRawInputString();
 	std::string GetInputString();
+	std::pair<std::string, std::vector<std::string>> GetCommandString();
 
 	void SetInputOptions(std::vector<std::string> options);
 };

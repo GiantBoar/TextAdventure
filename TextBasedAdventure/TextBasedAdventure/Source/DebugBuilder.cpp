@@ -1,12 +1,13 @@
 #include "../Headers/DebugBuilder.h"
 
+#pragma region DialogueTree
+
 static int idCounter = 0;
-int GetID()
+int Debug::GetID()
 {
 	return ++idCounter;
 }
-
-int CreateNode(DialogueTree* tree, int rootID)
+int Debug::CreateNode(DialogueTree* tree, int rootID)
 {
 	std::string dialogue;
 	std::cout << "dialogue for node\n> ";
@@ -18,8 +19,7 @@ int CreateNode(DialogueTree* tree, int rootID)
 
 	return id;
 }
-
-void SaveDialogueTree(DialogueTree* tree, std::string fileName)
+void Debug::SaveDialogueTree(DialogueTree* tree, std::string fileName)
 {
 	std::ofstream dialogueFile(ResourcePath("Dialogue/" + fileName), std::ifstream::binary | std::ofstream::trunc);
 	Json::Value data, branch, option;
@@ -52,8 +52,26 @@ void SaveDialogueTree(DialogueTree* tree, std::string fileName)
 
 	dialogueFile.close();
 }
+bool Debug::CheckTree(DialogueTree* tree, DialogueNode* rootNode)
+{
+	if (rootNode->dialogue == "END" || rootNode->dialogue == "BATTLE") return true;
+	else if (rootNode->options.size() == 0)
+	{
+		printf("error root: node %d dialogue %s", rootNode->id, rootNode->dialogue.c_str());
+		return false;
+	}
 
-void DialogueTreeCommand(DialogueTree* tree, std::string treeName)
+	for (int i = 0; i < rootNode->options.size(); i++)
+	{
+		if (!CheckTree(tree, tree->GetNode(rootNode->options[i].first)))
+		{
+			printf("error branch upwards: node %d with dialogue %s", rootNode->id, rootNode->dialogue.c_str());
+			return false;
+		}
+	}
+}
+
+void Debug::DialogueTreeCommand(DialogueTree* tree, std::string treeName)
 {
 	int currentNodeID = tree->tree[0].id;
 
@@ -113,9 +131,12 @@ void DialogueTreeCommand(DialogueTree* tree, std::string treeName)
 		}
 		else if (command == "root")
 		{
+			std::cout << "returnign to the root node";
+			Sleep(1000);
 			while (node->rootNodeID != -1)
 			{
 				node = tree->GetNode(node->rootNodeID);
+				currentNodeID = node->id;
 			}
 		}
 		else if (command.substr(0, 6) == "choose")
@@ -129,9 +150,22 @@ void DialogueTreeCommand(DialogueTree* tree, std::string treeName)
 			if (f >= node->options.size()) continue;
 
 			currentNodeID = node->options[f].first;
-			std::cout << node->options[f].first;
-			Sleep(1000);
 		}
+		else if(command == "checktree")
+		{
+			DialogueNode* n = node;
+
+			while (n->rootNodeID != -1)
+			{
+				n = tree->GetNode(n->rootNodeID);
+			}
+
+			CheckTree(tree, n);
+
+			std::getline(std::cin, command);
+		}
+
+		SaveDialogueTree(tree, treeName);
 	}
 }
 
@@ -140,8 +174,9 @@ void Debug::MakeDialogueTree()
 	system("cls");
 
 	std::cout << "name dialogue tree\n> ";
-	std::string treeName;
-	std::getline(std::cin, treeName);
+	std::string treeName, tempName;
+	std::getline(std::cin, tempName);
+	for (int i = 0; i < tempName.length(); i++) if (tempName[i] != ' ') treeName.push_back(tempName[i]);
 	treeName += ".json";
 
 	DialogueTree tree = DialogueTree();
@@ -179,4 +214,136 @@ void Debug::EditDialogueTree()
 	}
 
 	DialogueTreeCommand(&t, filename);
+}
+
+#pragma endregion
+
+void Debug::MakeLevel()
+{
+	system("cls");
+
+	std::cout << "name level\n> ";
+	std::string levelName, tempName;
+	std::getline(std::cin, tempName);
+	for (int i = 0; i < tempName.length(); i++) if (tempName[i] != ' ') levelName.push_back(tempName[i]);
+	levelName += ".json";
+
+	LevelData levelData = LevelData();
+
+	std::string temp;
+
+	std::cout << "enter the levels proper name:\n> ";
+	std::getline(std::cin, temp);
+	levelData.name = temp;
+
+	std::cout << "enter the levels entrance description:\n> ";
+	std::getline(std::cin, temp);
+	levelData.description = temp;
+
+	std::cout << "enter the levels help text:\n> ";
+	std::getline(std::cin, temp);
+	levelData.helptext = temp;
+
+
+	std::cout << "enter the levels default look:\n> ";
+	std::getline(std::cin, temp);
+	levelData.lookInfo.insert({ "default", temp });
+
+	LevelCommand(&levelData, levelName);
+}
+
+void Debug::SaveLevel(LevelData* levelData, std::string fileName)
+{
+	std::ofstream levelFile(ResourcePath("Levels/" + fileName), std::ifstream::binary | std::ofstream::trunc);
+	Json::Value data, people, places, looks;
+
+	if (!levelFile.good()) printf(" but something went wrong!");
+
+	data["name"] = levelData->name;
+	data["description"] = levelData->description;
+
+	data["special"] = levelData->specialArea;
+	data["areaCode"] = levelData->areaCode;
+	data["help"] = levelData->helptext;
+	data["lastLevel"] = levelData->lastLevelName;
+
+	for (int i = 0; i < levelData->people.size(); i++)
+	{
+		people[i] = levelData->people[i];
+	}
+	for (int i = 0; i < levelData->places.size(); i++)
+	{
+		places[i] = levelData->places[i];
+	}
+	for (const auto& kvpair : levelData->lookInfo)
+	{
+		looks[kvpair.first] = kvpair.second;
+	}
+
+	data["people"] = people;
+	data["places"] = places;
+	data["lookInfo"] = looks;
+
+	
+	levelFile << data;
+
+	levelFile.close();
+}
+
+void Debug::LevelCommand(LevelData* levelData, std::string levelName)
+{
+	std::string command;
+
+	while (true)
+	{
+		system("cls");
+		std::cout << "enter a command:\n> ";
+		std::getline(std::cin, command);
+
+		if (command == "createperson")
+		{
+			std::cout << "enter their name\n> ";
+			std::getline(std::cin, command);
+
+			levelData->people.push_back(command);
+		}
+		else if (command == "createplace")
+		{
+			std::cout << "enter the location name\n> ";
+			std::getline(std::cin, command);
+
+			levelData->places.push_back(command);
+		}
+		else if (command == "createlook")
+		{
+			std::cout << "enter its name\n> ";
+			std::getline(std::cin, command);
+
+			std::cout << "enter its description\n> ";
+			std::string temp;
+			std::getline(std::cin, temp);
+
+			levelData->lookInfo.insert({ command, temp });
+		}
+		else if (command == "toggleAreaSpecial")
+		{
+			std::cout << !levelData->specialArea ? "area is now special" : "area is not special";
+			levelData->specialArea = !levelData->specialArea;
+
+			Sleep(2000);
+		}
+		else if (command == "setlastlevel")
+		{
+			std::cout << "enter the name of the last level\n> ";
+			std::getline(std::cin, command);
+
+			levelData->lastLevelName = command;
+		}
+		else if (command == "exit")
+		{
+			break;
+		}
+
+		Debug::SaveLevel(levelData, levelName);
+	}
 }

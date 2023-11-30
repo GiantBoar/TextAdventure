@@ -1,0 +1,23 @@
+{
+	"areaCode" : 0,
+	"description" : "Your horse grows weary; @300 you've been riding for hours, @200 over the cracked rotted dirt, @200 towards the distant tower of pollution",
+	"help" : "A stranger's advice can't hurt",
+	"lastLevel" : "",
+	"lookInfo" : 
+	{
+		"campfire" : "The campfire is warm and welcoming. You can feel the cold in your exhausted body worse with the view",
+		"default" : "Thick mist envelops the surroundings, but you can still see the extent of the destruction around you; the grass has withered, turned brown and crispy beneath your horse's hooves. The warm glow of a campfire beams through the mist and welcoms you, and an old traveller sits by the campsite, staring into the flames.",
+		"grass" : "The grass around you is withered and dead. Looking closer, bright worms writhe in the mud around the grass, reflecting the campfire's light back at you with their oily bodies.",
+		"traveller" : "From what you can see, he is old and withered. His clothes are stained and torn, and besides his seat at the campfire is a cobbled bag of supplies."
+	},
+	"name" : "Campfire",
+	"people" : 
+	[
+		"traveller"
+	],
+	"places" : 
+	[
+		"$campsite traveller"
+	],
+	"special" : false
+}

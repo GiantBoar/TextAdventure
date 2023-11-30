@@ -32,11 +32,23 @@ enum class GameState
 	Pause,
 
 	// levels
-	OpeningCutscene
+	OpeningCutscene,
+	DefaultLevel
 };
 
 void GameLoop();
 void SetupInputs();
+std::clock_t GetTime();
+
+void EndGame();
+void ContinueGame();
+COORD GetInputPosition();
+
+void ChangeState(GameState newState);
+void LoadLevel(std::string levelName);
+void LevelCommand();
+void LoadDialogue(std::string characterName);
+
 void SelectCharacter();
 
 std::clock_t GetTime();

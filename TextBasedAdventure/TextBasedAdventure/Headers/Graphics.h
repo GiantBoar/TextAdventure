@@ -133,12 +133,12 @@ namespace UI
 		std::string buttonLabel;
 
 		GameState newState;
-		void* onInteract = nullptr;
+		void(*onInteract) = nullptr;
 		bool selected = false;
 
 		bool centreAligned;
 
-		Button(ScreenCoord pos, std::string label, bool centreAligned, void* interactFunction);
+		Button(ScreenCoord pos, std::string label, bool centreAligned, void(*interactFunction));
 		Button(ScreenCoord pos, std::string label, bool centreAligned, GameState changeState);
 
 		void Draw();
@@ -199,27 +199,30 @@ public:
 	void ClearScreen();
 	void Reset();
 
-	void CheckAnimations();
-
-	Sprite* GetSprite(std::string name);
-
+	// SPRITES
 	Sprite* LoadSprite(std::string name, std::string fileName, int priority, ScreenCoord position, bool centreX = false, bool centreY = false);
 	Sprite* LoadAnimation(std::string name, std::string fileName, int priority, ScreenCoord position, bool centreX = false, bool centreY = false);
 	void SortSprites();
+	void CheckAnimations();
+	Sprite* GetSprite(std::string name);
 
 	ScreenCoord GetWindowCentre();
 
+	// UI
 	void AddLabel(UI::Label label);
 	void OrganiseButtons(ScreenCoord position, ScreenCoord spacing, std::vector<UI::Button> buttons);
 	void ChangeSelection(int selection);
 	void Interact();
-	void WarnInputError();
 
+	// TEXT
 	void DrawInputBox();
 	void WriteLine(std::string line);
 	void WriteLines(std::string lines[], int lineNum, int linePause);
-	void DrawWordCache();
+	void DrawWordCache(int yOffset = 0);
 	void ClearWordCache();
+	void WarnInputError();
+
+	// DIALOGUE
 
 	static std::string ColourString(std::string str, int colour);
 };

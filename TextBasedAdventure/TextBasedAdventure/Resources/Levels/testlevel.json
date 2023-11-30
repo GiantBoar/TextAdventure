@@ -1,0 +1,18 @@
+{
+	"areaCode" : 0,
+	"description" : "this area is to test things",
+	"lookInfo" : 
+	{
+		"fish" : "stinky fish"
+	},
+	"name" : "Test Level",
+	"people" : 
+	[
+		"joe"
+	],
+	"places" : 
+	[
+		"next area"
+	],
+	"special" : false
+}

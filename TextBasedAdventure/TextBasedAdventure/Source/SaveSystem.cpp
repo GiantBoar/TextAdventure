@@ -30,7 +30,6 @@ void SaveSystem::LoadPlayerData(PlayerData* data)
 
 	if (!playerFile.good()) return;
 
-
 	playerFile >> playerData;
 
 	data->name = playerData["name"].asString();

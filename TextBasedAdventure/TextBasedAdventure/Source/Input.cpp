@@ -116,6 +116,53 @@ std::string InputHandler::GetInputString()
 	}
 }
 
+std::pair<std::string, std::vector<std::string>> InputHandler::GetCommandString() 
+{
+	std::vector<std::string> args;
+	int currentArg = 0;
+
+	COORD p = GetInputPosition();
+	printf("\033[%d;%dH", p.Y, p.X);
+
+	std::string input;
+	std::getline(std::cin, input);
+	LowercaseString(input);
+
+	args.push_back(std::string());
+	for (int i = 0; i < input.length(); i++)
+	{
+		if (input[i] == ' ')
+		{
+			args.push_back(std::string());
+			currentArg++;
+		}
+		else 
+		{
+			args[currentArg].push_back(input[i]);
+		}
+	}
+
+	bool checkVal = false;
+
+	for (int i = 0; i < inputOptions.size(); i++)
+	{
+		if (inputOptions[i] == args[0])
+		{
+			checkVal = true;
+			break;
+		}
+	}
+
+	if (checkVal)
+	{
+		return { args[0], args };
+	}
+	else
+	{
+		return { "ERROR", args };
+	}
+}
+
 void InputHandler::SetInputOptions(std::vector<std::string> options)
 {
 	inputOptions.clear();

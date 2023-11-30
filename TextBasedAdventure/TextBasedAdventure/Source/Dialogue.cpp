@@ -25,8 +25,6 @@ void DialogueTree::LoadDialogueTree(std::string fileName)
 		for (int j = 0; j < optionsNum; j++)
 		{
 			option = data[i]["options"][j];
-			std::cout << option["ID"].asInt() << std::endl;
-			Sleep(2000);
 			GetNode(currentNodeID)->options.push_back({ option["ID"].asInt(), option["dialogue"].asString() });
 		}
 	}

@@ -146,6 +146,7 @@
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\jsoncpp.cpp" />
+    <ClCompile Include="Source\Level.cpp" />
     <ClCompile Include="Source\SaveSystem.cpp" />
     <ClCompile Include="Source\Source.cpp" />
     <ClCompile Include="Source\Game.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Headers\Input.h" />
     <ClInclude Include="Headers\Json\json-forwards.h" />
     <ClInclude Include="Headers\Json\json.h" />
+    <ClInclude Include="Headers\Level.h" />
     <ClInclude Include="Headers\ResourcePath.h" />
     <ClInclude Include="Headers\SaveSystem.h" />
   </ItemGroup>

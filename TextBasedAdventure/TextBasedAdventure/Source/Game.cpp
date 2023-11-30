@@ -7,19 +7,25 @@ InputHandler* inputs = InputHandler::GetInstance();
 SaveSystem::PlayerData* playerData = new SaveSystem::PlayerData();
 bool gameRunning = true;
 
+LevelData currentLevel;
+
 #pragma endregion
 
 #if DEBUG_BUILD
-void MakeDialogueTree() { Debug::MakeDialogueTree(); }
-void EditDialogueTree() { Debug::EditDialogueTree(); }
+void DebugLoadLevel()
+{
+    LoadLevel("campfire");
+}
 
 void OpenDebugMenu()
 {
     graphics->Reset();
 
     graphics->OrganiseButtons(graphics->GetWindowCentre(), ScreenCoord(0, 2), std::vector<UI::Button> {
-        UI::Button(ScreenCoord(1, 1), " Create Dialogue Tree ", true, MakeDialogueTree),
-            UI::Button(ScreenCoord(1, 1), " Edit Dialogue Tree ", true, EditDialogueTree)
+        UI::Button(ScreenCoord(1, 1), " Create Dialogue Tree ", true, Debug::MakeDialogueTree),
+            UI::Button(ScreenCoord(1, 1), " Edit Dialogue Tree ", true, Debug::EditDialogueTree),
+            UI::Button(ScreenCoord(1, 1), " Create Level ", true, Debug::MakeLevel),
+            UI::Button(ScreenCoord(1, 1), " Load Campfire ", true, DebugLoadLevel)
     });
 }
 #endif
@@ -64,7 +70,6 @@ void ContinueGame()
     SaveSystem::LoadPlayerData(playerData);
     ChangeState(playerData->currentLocation);
 }
-
 
 COORD GetInputPosition()
 {
@@ -168,12 +173,140 @@ void ChangeState(GameState newState)
 
         graphics->WriteLines(lines, sizeof(lines) / sizeof(lines[0]), 400);
 
+        Sleep(2000);
+
+        graphics->WriteLine(" - now your journey begins! remember, if you're ever lost, press type 'help' - ");
+
+        LoadLevel("campfire");
+
+        break;
+    }
+    case GameState::DefaultLevel:
+    {
+        onLoop = LevelCommand;
+
+        graphics->state = GraphicsState::TEXT;
+
+        inputs->SetInputOptions(std::vector<std::string>{ "look", "go", "talk", "back" });
+
+        graphics->WriteLine(currentLevel.description);
+
+        Sleep(1000);
+
+        graphics->WriteLine("please input commands");
+
         break;
     }
     }
 }
 
-// the process of choosing 
+void LoadLevel(std::string levelName)
+{
+    LoadLevelData(&currentLevel, levelName + ".json");
+
+    if (currentLevel.specialArea)
+    {
+        ChangeState((GameState)currentLevel.areaCode);
+    }
+    else 
+    {
+        ChangeState(GameState::DefaultLevel);
+    }
+}
+
+void LevelCommand()
+{
+    graphics->Redraw();
+
+    std::pair<std::string, std::vector<std::string>> command = inputs->GetCommandString();
+
+    if (command.first == "ERROR")
+    {
+        graphics->WarnInputError();
+        return;
+    }
+    
+    if (command.first == "look")
+    {
+        if (command.second.size() == 1)
+        {
+            // default look command with no parameters
+            graphics->WriteLine(currentLevel.lookInfo["default"]);
+        }
+        else if (currentLevel.lookInfo.count(command.second[1]))
+        {
+            graphics->WriteLine(currentLevel.lookInfo[command.second[1]]);
+        }
+        else 
+        {
+            graphics->WarnInputError();
+        }
+    }
+    else if (command.first == "go")
+    {
+        if (command.second.size() < 2) return;
+
+        for (int i = 0; i < currentLevel.places.size(); i++)
+        {
+            // special place that instead opens dialogue
+            if (currentLevel.places[i][0] == '$')
+            {
+                std::string s;
+                for (int j = 1; j < currentLevel.places[i].length(); j++)
+                {
+                    if (currentLevel.places[i][j] == ' ') break;
+
+                    s.push_back(currentLevel.places[i][j]);
+                }
+
+                if (s == command.second[1])
+                {
+                    LoadDialogue(command.second[1].substr(command.second[1].find(' ')));
+                }
+            }
+
+            if (currentLevel.places[i] == command.second[1])
+            {
+                LoadLevel(command.second[1]);
+                return;
+            }
+        }
+
+        graphics->WarnInputError();
+    }
+    else if (command.first == "talk")
+    {
+        if (command.second.size() < 2) return;
+
+        for (int i = 0; i < currentLevel.people.size(); i++)
+        {
+            if (currentLevel.people[i] == command.second[1])
+            {
+                LoadDialogue(command.second[1]);
+                return;
+            }
+        }
+
+        graphics->WarnInputError();
+    }
+    else if (command.first == "back")
+    {
+        if (currentLevel.lastLevelName != "")
+        {
+            LoadLevel(currentLevel.lastLevelName);
+            return;
+        }
+
+        graphics->WriteLine("you cant go back now");
+    }
+}
+
+void LoadDialogue(std::string characterName)
+{
+
+}
+
+// the process of choosing a character class and naming yourself
 void SelectCharacter()
 {
     graphics->Reset();

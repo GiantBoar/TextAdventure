@@ -414,11 +414,11 @@ void GraphicsHandler::WriteLines(std::string lines[], int lineNum, int linePause
 	}
 }
 
-void GraphicsHandler::DrawWordCache()
+void GraphicsHandler::DrawWordCache(int yOffset)
 {
 	for (int i = 0; i < WORDCACHESIZE; i++)
 	{
-		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i, 2, textCache[(i + 1 + lastCacheIndex) % WORDCACHESIZE].c_str());
+		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i + yOffset, 2, textCache[(i + 1 + lastCacheIndex) % WORDCACHESIZE].c_str());
 	}
 }
 
