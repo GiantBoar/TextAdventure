@@ -30,13 +30,15 @@ enum class GameState
 	Title,
 	Credits,
 	Pause,
-
+	Dialogue,
 	// levels
 	OpeningCutscene,
-	DefaultLevel
+	DefaultLevel,
+	Campfire,
 };
 
 void GameLoop();
+void ProcessInput();
 void SetupInputs();
 std::clock_t GetTime();
 
@@ -47,6 +49,7 @@ COORD GetInputPosition();
 void ChangeState(GameState newState);
 void LoadLevel(std::string levelName);
 void LevelCommand();
+void DefaultLevelCommands(Command* c);
 void LoadDialogue(std::string characterName);
 
 void SelectCharacter();

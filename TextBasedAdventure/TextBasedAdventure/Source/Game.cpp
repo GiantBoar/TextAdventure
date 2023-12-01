@@ -36,7 +36,7 @@ void (*onLoop)();
 #pragma region General Game Functions
 void GameLoop()
 {
-    inputs->ProcessInput();
+    ProcessInput();
 
     graphics->CheckAnimations();
     graphics->CheckRedraw();
@@ -44,6 +44,8 @@ void GameLoop()
     if (onLoop != nullptr)
         ((void(*)())onLoop)();
 }
+
+void ProcessInput() { inputs->ProcessInput(); }
 
 void SetupInputs()
 {
@@ -53,6 +55,8 @@ void SetupInputs()
     inputs->AddKey(VK_DOWN, UI::NavigateUI);
 
     inputs->AddKey(VK_RETURN, UI::InteractUI);
+
+    inputs->AddKey(VK_SPACE, UI::SkipText);
 }
 
 std::clock_t GetTime()
@@ -143,6 +147,8 @@ void ChangeState(GameState newState)
     }
     case GameState::OpeningCutscene:
     {
+        graphics->ClearWordCache();
+
         playerData->currentLocation = GameState::OpeningCutscene;
         SaveSystem::SavePlayerData(playerData);
 
@@ -183,11 +189,17 @@ void ChangeState(GameState newState)
     }
     case GameState::DefaultLevel:
     {
+        graphics->Reset();
+        graphics->ClearWordCache();
+
+        graphics->AddLabel(UI::Label(currentLevel.name, ScreenCoord(graphics->GetWindowCentre().X, 2), true));
+        graphics->AddDivider(3);
+
         onLoop = LevelCommand;
 
         graphics->state = GraphicsState::TEXT;
 
-        inputs->SetInputOptions(std::vector<std::string>{ "look", "go", "talk", "back" });
+        inputs->SetInputOptions(std::vector<std::string>{ "look", "go", "talk", "back", "help" });
 
         graphics->WriteLine(currentLevel.description);
 
@@ -197,12 +209,26 @@ void ChangeState(GameState newState)
 
         break;
     }
+    case GameState::Dialogue:
+    {
+        graphics->Reset();
+        graphics->ClearWordCache();
+        graphics->state = GraphicsState::DIALOGUE;
+
+        DrawNode();
+
+        break;
     }
+    }
+
+    SaveSystem::SavePlayerData(playerData);
 }
 
 void LoadLevel(std::string levelName)
 {
     LoadLevelData(&currentLevel, levelName + ".json");
+
+    playerData->currentLocation = (GameState)currentLevel.areaCode;
 
     if (currentLevel.specialArea)
     {
@@ -213,38 +239,49 @@ void LoadLevel(std::string levelName)
         ChangeState(GameState::DefaultLevel);
     }
 }
+void LoadCurrentLevel()
+{
+    if (currentLevel.specialArea)
+    {
+        ChangeState((GameState)currentLevel.areaCode);
+    }
+    else
+    {
+        ChangeState(GameState::DefaultLevel);
+    }
+}
 
 void LevelCommand()
 {
     graphics->Redraw();
 
-    std::pair<std::string, std::vector<std::string>> command = inputs->GetCommandString();
+    Command command = inputs->GetCommandString();
 
-    if (command.first == "ERROR")
+    DefaultLevelCommands(&command);
+}
+void DefaultLevelCommands(Command* c)
+{
+    if (c->first == "ERROR")
     {
         graphics->WarnInputError();
         return;
     }
-    
-    if (command.first == "look")
+
+    if (c->first == "look")
     {
-        if (command.second.size() == 1)
+        if (c->second.size() == 1)
         {
             // default look command with no parameters
             graphics->WriteLine(currentLevel.lookInfo["default"]);
         }
-        else if (currentLevel.lookInfo.count(command.second[1]))
+        else if (currentLevel.lookInfo.count(c->second[1]))
         {
-            graphics->WriteLine(currentLevel.lookInfo[command.second[1]]);
-        }
-        else 
-        {
-            graphics->WarnInputError();
+            graphics->WriteLine(currentLevel.lookInfo[c->second[1]]);
         }
     }
-    else if (command.first == "go")
+    else if (c->first == "go")
     {
-        if (command.second.size() < 2) return;
+        if (c->second.size() < 2) return;
 
         for (int i = 0; i < currentLevel.places.size(); i++)
         {
@@ -259,37 +296,57 @@ void LevelCommand()
                     s.push_back(currentLevel.places[i][j]);
                 }
 
-                if (s == command.second[1])
+                if (s == c->second[1])
                 {
-                    LoadDialogue(command.second[1].substr(command.second[1].find(' ')));
+                    LoadDialogue(c->second[1].substr(c->second[1].find(' ')));
+                    return;
                 }
             }
 
-            if (currentLevel.places[i] == command.second[1])
+            if (currentLevel.places[i] == c->second[1])
             {
-                LoadLevel(command.second[1]);
+                LoadLevel(c->second[1]);
                 return;
             }
         }
-
-        graphics->WarnInputError();
     }
-    else if (command.first == "talk")
+    else if (c->first == "talk")
     {
-        if (command.second.size() < 2) return;
+        if (c->second.size() < 2) return;
 
         for (int i = 0; i < currentLevel.people.size(); i++)
         {
-            if (currentLevel.people[i] == command.second[1])
+            if (currentLevel.people[i] == c->second[1])
             {
-                LoadDialogue(command.second[1]);
+                LoadDialogue(c->second[1]);
                 return;
             }
         }
-
-        graphics->WarnInputError();
     }
-    else if (command.first == "back")
+    else if (c->first == "help")
+    {
+        if (c->second.size() > 1 && c->second[1] == "area")
+        {
+            graphics->WriteLine(currentLevel.helptext);
+
+            return;
+        }
+        else
+        {
+            std::string helpLines[] = {
+                "look [something] - take a closer look at something specific, @300 if you input without a specific subject your character will have a general look around",
+                "go [place] - go somewhere to do something",
+                "talk [person] - talk to someone",
+                "help - open this menu",
+                "help area - gives a specific hint for your current location"
+            };
+
+            graphics->WriteLines(helpLines, 5, 200);
+
+            return;
+        }
+    }
+    else if (c->first == "back")
     {
         if (currentLevel.lastLevelName != "")
         {
@@ -298,12 +355,16 @@ void LevelCommand()
         }
 
         graphics->WriteLine("you cant go back now");
+        return;
     }
+
+    graphics->WarnInputError();
 }
 
 void LoadDialogue(std::string characterName)
 {
-
+    currentTree->LoadDialogueTree(characterName + ".json");
+    ChangeState(GameState::Dialogue);
 }
 
 // the process of choosing a character class and naming yourself

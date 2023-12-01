@@ -214,6 +214,13 @@ Sprite* GraphicsHandler::GetSprite(std::string name)
 	return nullptr;
 }
 
+void GraphicsHandler::AddDivider(int yHeight)
+{
+	Sprite* s = new Sprite("divider", 10, ScreenCoord(1, yHeight));
+	s->spriteLines.push_back(std::string(windowSize.X, '_'));
+	sprites.push_back(s);
+}
+
 // update graphics if any animations have changed
 void GraphicsHandler::CheckAnimations()
 {
@@ -244,6 +251,11 @@ void GraphicsHandler::WarnInputError()
 	Sleep(1000);
 
 	Redraw();
+}
+
+void GraphicsHandler::SkipText()
+{
+	currentWriteSpeed = 0;
 }
 
 // draws the graphics depending on the current graphics state
@@ -289,6 +301,17 @@ void GraphicsHandler::Draw()
 		DrawInputBox();
 
 		break;
+	case GraphicsState::DIALOGUE:
+		for (int i = 0; i < sprites.size(); i++)
+		{
+			sprites[i]->Draw();
+		}
+
+		DrawUI();
+
+		DrawWordCache();
+
+		break;
 	}
 }
 
@@ -330,13 +353,13 @@ void GraphicsHandler::Reset()
 		delete sprites[i];
 	}
 
-	ClearWordCache();
-
 	sprites.clear();
 	buttons.clear();
 	labels.clear();
 
 	selectedButtonIndex = 0;
+
+	cacheOffset = 0;
 
 	changed = true;
 }
@@ -358,12 +381,16 @@ void GraphicsHandler::WriteLine(std::string line)
 	textCache[lastCacheIndex] = "";
 	Redraw();
 
+	currentWriteSpeed = 40;
+
 	std::string currentWord = "";
 
 	DrawWordCache();
 
 	for (int i = 0; i < line.length(); i++)
 	{
+		ProcessInput();
+			
 		if (textCache[lastCacheIndex].length() + currentWord.length() >= windowSize.X - 2)
 		{
 			lastCacheIndex = (lastCacheIndex + 1) % WORDCACHESIZE;
@@ -385,7 +412,7 @@ void GraphicsHandler::WriteLine(std::string line)
 				i++;
 			}
 
-			if(pauseArg != "") Sleep(std::stoi(pauseArg));
+			if(pauseArg != "" && currentWriteSpeed != 0) Sleep(std::stoi(pauseArg));
 			continue;
 		}
 
@@ -398,7 +425,7 @@ void GraphicsHandler::WriteLine(std::string line)
 		}
 
 		std::cout << line[i];
-		Sleep(50);
+		Sleep(currentWriteSpeed);
 	}
 
 	if(currentWord.length() != 0) textCache[lastCacheIndex] += currentWord;
@@ -410,15 +437,16 @@ void GraphicsHandler::WriteLines(std::string lines[], int lineNum, int linePause
 	{
 		WriteLine(lines[i]);
 
-		Sleep(linePause);
+		if(currentWriteSpeed != 0)
+			Sleep(linePause);
 	}
 }
 
-void GraphicsHandler::DrawWordCache(int yOffset)
+void GraphicsHandler::DrawWordCache()
 {
 	for (int i = 0; i < WORDCACHESIZE; i++)
 	{
-		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i + yOffset, 2, textCache[(i + 1 + lastCacheIndex) % WORDCACHESIZE].c_str());
+		printf("\033[%d;%dH%s", windowSize.Y - (3 + WORDCACHESIZE) + i + cacheOffset, 2, textCache[(i + 1 + lastCacheIndex) % WORDCACHESIZE].c_str());
 	}
 }
 
@@ -508,7 +536,7 @@ namespace UI
 	}
 
 	// constructor for a button that assigns all its data
-	Button::Button(ScreenCoord pos, std::string label, bool centred, void* interactFunction)
+	Button::Button(ScreenCoord pos, std::string label, bool centred, void(*interactFunction))
 	{
 		position = pos;
 
@@ -547,6 +575,11 @@ namespace UI
 	void InteractUI(WORD key)
 	{
 		GraphicsHandler::GetInstance()->Interact();
+	}
+
+	void SkipText(WORD key)
+	{
+		GraphicsHandler::GetInstance()->SkipText();
 	}
 }
 

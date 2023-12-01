@@ -22,10 +22,12 @@ int Debug::CreateNode(DialogueTree* tree, int rootID)
 void Debug::SaveDialogueTree(DialogueTree* tree, std::string fileName)
 {
 	std::ofstream dialogueFile(ResourcePath("Dialogue/" + fileName), std::ifstream::binary | std::ofstream::trunc);
-	Json::Value data, branch, option;
+	Json::Value data, branchTree, branch, option;
 	DialogueNode node;
 
 	if (!dialogueFile.good()) printf(" but something went wrong!");
+
+	data["characterName"] = tree->characterName;
 
 	for (int i = 0; i < tree->tree.size(); i++)
 	{
@@ -45,8 +47,10 @@ void Debug::SaveDialogueTree(DialogueTree* tree, std::string fileName)
 			branch["options"][j] = option;
 		}
 
-		data[i] = branch;
+		branchTree[i] = branch;
 	}
+
+	data["tree"] = branchTree;
 
 	dialogueFile << data;
 
@@ -177,9 +181,11 @@ void Debug::MakeDialogueTree()
 	std::string treeName, tempName;
 	std::getline(std::cin, tempName);
 	for (int i = 0; i < tempName.length(); i++) if (tempName[i] != ' ') treeName.push_back(tempName[i]);
+	std::string characterName = treeName;
 	treeName += ".json";
 
 	DialogueTree tree = DialogueTree();
+	tree.characterName = characterName;
 	CreateNode(&tree, -1);
 
 	DialogueTreeCommand(&tree, treeName);
@@ -239,6 +245,25 @@ void Debug::MakeLevel()
 	std::cout << "enter the levels entrance description:\n> ";
 	std::getline(std::cin, temp);
 	levelData.description = temp;
+
+	while (true)
+	{
+		std::cout << "what number index is the level?\n> ";
+		std::string num;
+		std::getline(std::cin, num);
+
+		for (int i = 0; i < num.size(); i++)
+		{
+			if (!std::isdigit(num[i]))
+			{
+				std::cout << "input error\n";
+				continue;
+			}
+		}
+
+		int index = std::stoi(num);
+		levelData.areaCode = index;
+	}
 
 	std::cout << "enter the levels help text:\n> ";
 	std::getline(std::cin, temp);

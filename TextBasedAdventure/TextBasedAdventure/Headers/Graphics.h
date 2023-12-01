@@ -37,6 +37,7 @@ enum class GameState;
 std::clock_t GetTime();
 
 void ChangeState(GameState);
+void ProcessInput();
 
 // structure to store an X and Y position
 struct ScreenCoord : COORD
@@ -147,6 +148,8 @@ namespace UI
 	void NavigateUI(WORD key);
 
 	void InteractUI(WORD key);
+
+	void SkipText(WORD key);
 }
 
 enum class GraphicsState
@@ -154,7 +157,8 @@ enum class GraphicsState
 	MENU,
 	TEXT,
 	BATTLE,
-	INPUT
+	INPUT,
+	DIALOGUE
 };
 
 class GraphicsHandler
@@ -181,6 +185,7 @@ public:
 
 	std::string textCache[WORDCACHESIZE];
 	short lastCacheIndex = 0;
+	int cacheOffset;
 
 	// our singleton instance retriever
 	static GraphicsHandler* GetInstance();
@@ -190,6 +195,8 @@ public:
 
 	// making sure that our singleton cannot be assigned to
 	void operator = (const GraphicsHandler&) = delete;
+
+	int currentWriteSpeed = 0;
 
 	// graphics-related functions
 	void Draw();
@@ -205,6 +212,7 @@ public:
 	void SortSprites();
 	void CheckAnimations();
 	Sprite* GetSprite(std::string name);
+	void AddDivider(int yHeight);
 
 	ScreenCoord GetWindowCentre();
 
@@ -218,11 +226,12 @@ public:
 	void DrawInputBox();
 	void WriteLine(std::string line);
 	void WriteLines(std::string lines[], int lineNum, int linePause);
-	void DrawWordCache(int yOffset = 0);
+	void DrawWordCache();
 	void ClearWordCache();
 	void WarnInputError();
+	void SkipText();
+	static std::string ColourString(std::string str, int colour);
 
 	// DIALOGUE
 
-	static std::string ColourString(std::string str, int colour);
 };

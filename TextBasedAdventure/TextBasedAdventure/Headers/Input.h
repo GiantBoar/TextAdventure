@@ -13,6 +13,8 @@ std::clock_t GetTime();
 void LowercaseString(std::string& str);
 COORD GetInputPosition();
 
+typedef std::pair<std::string, std::vector<std::string>> Command;
+
 class InputHandler
 {
 private:
@@ -51,7 +53,7 @@ public:
 
 	std::string GetRawInputString();
 	std::string GetInputString();
-	std::pair<std::string, std::vector<std::string>> GetCommandString();
+	Command GetCommandString();
 
 	void SetInputOptions(std::vector<std::string> options);
 };

@@ -12,8 +12,8 @@
 #include "ResourcePath.h"
 
 // forward decleration
-enum class PlayerAttacks;
-enum class PlayerSkills;
+struct PlayerAttacks;
+struct PlayerSkills;
 enum class GameState;
 
 namespace SaveSystem

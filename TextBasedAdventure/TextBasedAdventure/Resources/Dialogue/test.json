@@ -1,0 +1,23 @@
+{
+	"characterName" : "test",
+	"tree" : 
+	[
+		{
+			"ID" : 1,
+			"dialogue" : "test",
+			"options" : 
+			[
+				{
+					"ID" : 2,
+					"dialogue" : "I love to test!"
+				}
+			],
+			"rootID" : -1
+		},
+		{
+			"ID" : 2,
+			"dialogue" : "yes I do!",
+			"rootID" : 1
+		}
+	]
+}
