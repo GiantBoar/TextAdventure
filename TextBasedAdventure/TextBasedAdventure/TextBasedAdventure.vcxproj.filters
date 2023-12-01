@@ -45,9 +45,6 @@
     <ClCompile Include="Source\SaveSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Combat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DebugBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -62,7 +59,7 @@
     <Text Include="Resources\Sprites\UI\Title.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Resources\Sprites\StoryNotes.txt">
+    <Text Include="Resources\StoryNotes.txt">
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="Resources\Sprites\TitleBG.txt">
@@ -108,9 +105,6 @@
     <ClInclude Include="Headers\SaveSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Combat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\ResourcePath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -123,5 +117,13 @@
     <ClInclude Include="Headers\Level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Levels\testlevel.json" />
+    <None Include="Resources\Levels\campfire.json" />
+    <None Include="Resources\player.json" />
+    <None Include="Resources\Dialogue\test.json" />
+    <None Include="Resources\Dialogue\testtree.json" />
+    <None Include="Resources\Dialogue\traveller.json" />
   </ItemGroup>
 </Project>

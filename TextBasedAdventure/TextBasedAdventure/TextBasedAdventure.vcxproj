@@ -140,7 +140,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Combat.cpp" />
     <ClCompile Include="Source\DebugBuilder.cpp" />
     <ClCompile Include="Source\Dialogue.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
@@ -158,14 +157,13 @@
     <Text Include="Resources\Sprites\WarriorCard.txt" />
     <Text Include="Resources\Sprites\ArcherCard.txt" />
     <Text Include="Resources\Sprites\Characters - Copy.txt" />
-    <Text Include="Resources\Sprites\StoryNotes.txt" />
+    <Text Include="Resources\StoryNotes.txt" />
     <Text Include="Resources\Sprites\UI\Mountain.txt" />
     <Text Include="Resources\Sprites\TitleBG.txt" />
     <Text Include="Resources\Sprites\UI\Credits.txt" />
     <Text Include="Resources\Sprites\UI\Title.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Combat.h" />
     <ClInclude Include="Headers\DebugBuilder.h" />
     <ClInclude Include="Headers\Dialogue.h" />
     <ClInclude Include="Headers\Game.h" />
@@ -176,6 +174,14 @@
     <ClInclude Include="Headers\Level.h" />
     <ClInclude Include="Headers\ResourcePath.h" />
     <ClInclude Include="Headers\SaveSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dialogue\test.json" />
+    <None Include="Resources\Dialogue\testtree.json" />
+    <None Include="Resources\Dialogue\traveller.json" />
+    <None Include="Resources\Levels\campfire.json" />
+    <None Include="Resources\Levels\testlevel.json" />
+    <None Include="Resources\player.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

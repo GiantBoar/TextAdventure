@@ -29,3 +29,5 @@ To Do:
 - Double Buffer
 - make it so you cant resize
 - redo character cards to be tarot cards
+- make it describe the battles
+- finish game
