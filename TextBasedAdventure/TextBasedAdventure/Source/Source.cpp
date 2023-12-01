@@ -7,9 +7,14 @@ int main()
 {
     HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
 
+    // fix reoccuring randomness
+    srand(time(0));
+
     DWORD previousMode;
     GetConsoleMode(inputHandle, &previousMode);
     SetConsoleMode(inputHandle, ENABLE_EXTENDED_FLAGS | (previousMode & ~ENABLE_QUICK_EDIT_MODE));
+
+    if (SaveSystem::CanLoadSave()) SaveSystem::LoadPlayerData(playerData);
 
     SetupInputs();
 
@@ -21,6 +26,11 @@ int main()
     {
         GameLoop();
     }
+
+    delete graphics;
+    delete inputs;
+    delete playerData;
+    delete currentLevel;
 
     SetConsoleMode(inputHandle, ENABLE_EXTENDED_FLAGS | (previousMode));
 }

@@ -1,5 +1,5 @@
 {
-	"areaCode" : 0,
+	"areaCode" : 6,
 	"description" : "Your horse grows weary; @300 you've been riding for hours, @200 over the cracked rotted dirt, @200 towards the distant tower of pollution",
 	"help" : "A stranger's advice can't hurt",
 	"lastLevel" : "",
@@ -13,11 +13,11 @@
 	"name" : "Campfire",
 	"people" : 
 	[
-		"traveller"
+		[
+			"traveller",
+			"traveller",
+		]
 	],
-	"places" : 
-	[
-		"$campsite traveller"
-	],
+	"places" : null,
 	"special" : false
 }

@@ -7,14 +7,23 @@ InputHandler* inputs = InputHandler::GetInstance();
 SaveSystem::PlayerData* playerData = new SaveSystem::PlayerData();
 bool gameRunning = true;
 
-LevelData currentLevel;
+LevelData* currentLevel = new LevelData;
+
+// variable used for a variety of purposes between levels
+int randomLevelData = 0;
 
 #pragma endregion
 
 #if DEBUG_BUILD
 void DebugLoadLevel()
 {
-    LoadLevel("campfire");
+    graphics->ClearScreen();
+
+    std::string levelName;
+    std::cout << "Level Name: ";
+    std::getline(std::cin, levelName);
+
+    LoadLevel(levelName);
 }
 
 void OpenDebugMenu()
@@ -25,7 +34,7 @@ void OpenDebugMenu()
         UI::Button(ScreenCoord(1, 1), " Create Dialogue Tree ", true, Debug::MakeDialogueTree),
             UI::Button(ScreenCoord(1, 1), " Edit Dialogue Tree ", true, Debug::EditDialogueTree),
             UI::Button(ScreenCoord(1, 1), " Create Level ", true, Debug::MakeLevel),
-            UI::Button(ScreenCoord(1, 1), " Load Campfire ", true, DebugLoadLevel)
+            UI::Button(ScreenCoord(1, 1), " Load Level ", true, DebugLoadLevel)
     });
 }
 #endif
@@ -71,8 +80,10 @@ void EndGame() {
 
 void ContinueGame() 
 {
-    SaveSystem::LoadPlayerData(playerData);
-    ChangeState(playerData->currentLocation);
+    if (playerData->currentLocation == "forestpath")
+        playerData->currentLocation = "forestentrance";
+
+    LoadLevel(playerData->currentLocation);
 }
 
 COORD GetInputPosition()
@@ -83,8 +94,6 @@ COORD GetInputPosition()
 // function that handles transitioning to new game states, including loading sprites and menu buttons
 void ChangeState(GameState newState)
 {
-    graphics->Reset();
-
     onLoop = nullptr;
 
     switch (newState)
@@ -92,6 +101,8 @@ void ChangeState(GameState newState)
         // just the basic title scene with the background and title image and menu buttons.
     case GameState::Title:
     {
+        graphics->Reset();
+
         graphics->state = GraphicsState::MENU;
 
         Sprite* title = graphics->LoadSprite("Title", "UI/Title.txt", 1, graphics->GetWindowCentre() - ScreenCoord(0, 4), true, true);
@@ -110,7 +121,7 @@ void ChangeState(GameState newState)
     });
 #else
         // displays 'continue' button if you can load the save
-        if (SaveSystem::CanLoadSave())
+        if (SaveSystem::CanLoadSave() && playerData->currentLocation != "")
         {
             graphics->OrganiseButtons(graphics->GetWindowCentre() + ScreenCoord(0, 6), ScreenCoord(0, 2), std::vector<UI::Button> {
                 UI::Button(ScreenCoord(1, 1), " - New Game - ", true, SelectCharacter),
@@ -147,14 +158,13 @@ void ChangeState(GameState newState)
     }
     case GameState::OpeningCutscene:
     {
+        graphics->Reset();
+
         graphics->ClearWordCache();
 
-        playerData->currentLocation = GameState::OpeningCutscene;
         SaveSystem::SavePlayerData(playerData);
 
         graphics->state = GraphicsState::TEXT;
-
-        //graphics->LoadSprite("portrait", "Portraits/Template.txt", 1, ScreenCoord(graphics->GetWindowCentre().X, 2), true, false);
 
         std::string lines[] = {
             "@1000 Far east, @200 a small town sits against the stubborn country rock.",
@@ -177,35 +187,13 @@ void ChangeState(GameState newState)
             GraphicsHandler::ColourString(playerData->name, COLOUR_BRIGHT(COLOUR_PURPLE)) + " followed the rider's passage, both of you in search of " + GraphicsHandler::ColourString("The Mountain", COLOUR_BRIGHT(COLOUR_CYAN))
         };
 
-        graphics->WriteLines(lines, sizeof(lines) / sizeof(lines[0]), 400);
-
-        Sleep(2000);
+        graphics->WriteLines(lines, sizeof(lines) / sizeof(lines[0]));
 
         graphics->WriteLine(" - now your journey begins! remember, if you're ever lost, press type 'help' - ");
 
-        LoadLevel("campfire");
-
-        break;
-    }
-    case GameState::DefaultLevel:
-    {
-        graphics->Reset();
-        graphics->ClearWordCache();
-
-        graphics->AddLabel(UI::Label(currentLevel.name, ScreenCoord(graphics->GetWindowCentre().X, 2), true));
-        graphics->AddDivider(3);
-
-        onLoop = LevelCommand;
-
-        graphics->state = GraphicsState::TEXT;
-
-        inputs->SetInputOptions(std::vector<std::string>{ "look", "go", "talk", "back", "help" });
-
-        graphics->WriteLine(currentLevel.description);
-
         Sleep(1000);
 
-        graphics->WriteLine("please input commands");
+        LoadLevel("campfire");
 
         break;
     }
@@ -219,20 +207,164 @@ void ChangeState(GameState newState)
 
         break;
     }
+    case GameState::DefaultLevel:
+    {
+        graphics->Reset();
+        graphics->ClearWordCache();
+
+        graphics->AddLabel(UI::Label(currentLevel->name, ScreenCoord(graphics->GetWindowCentre().X, 2), true));
+        graphics->AddDivider(3);
+
+        onLoop = LevelCommand;
+
+        graphics->state = GraphicsState::TEXT;
+
+        inputs->SetInputOptions(std::vector<std::string>{ "look", "go", "talk", "back", "help" });
+
+        graphics->WriteLine(currentLevel->description);
+
+        graphics->WriteLine("please input commands");
+
+        break;
+    }
+
+    case GameState::ForestEntrance:
+    {
+        ChangeState(GameState::DefaultLevel);
+
+        if(playerData->flags["survivedForest"])
+            graphics->WriteLine("You remember the forest more now, and you can retrace your steps out (go leave)");
+
+        onLoop = ForestCommands;
+
+        break;
+    }
+    case GameState::ForestPath:
+    {
+        if (graphics->state != GraphicsState::TEXT) ChangeState(GameState::DefaultLevel);
+
+        onLoop = ForestCommands;
+
+        graphics->WriteLine(currentLevel->description);
+
+        graphics->WriteLine("please input commands");
+
+        break;
+    }
+    case GameState::ForestExit:
+    {
+        ChangeState(GameState::DefaultLevel);
+
+        playerData->flags["survivedForest"] = true;
+
+        break;
+    }
+    case GameState::Town:
+    {
+        ChangeState(GameState::DefaultLevel);
+
+        graphics->WriteLine("enter anything to return to the title");
+
+        inputs->GetRawInputString();
+
+        ChangeState(GameState::Title);
+
+        break;
+    }
     }
 
     SaveSystem::SavePlayerData(playerData);
 }
 
+void ForestCommands()
+{
+    graphics->Redraw();
+
+    Command command = inputs->GetCommandString();
+
+    std::string answerSheet[] = { "north", "east", "north", "west" };
+
+    // additional movement commands
+    if (command.first == "go")
+    {
+        if (command.second.size() < 2)
+        {
+            graphics->WarnInputError();
+            return;
+        }
+
+        if (randomLevelData == -1)
+        {
+            graphics->WriteLine("You find yourself getting more and more lost in the tangled branches of the forest, until you're right back where you started. @300");
+            LoadLevel("forestentrance");
+            randomLevelData = 0;
+            return;
+        }
+        else if (randomLevelData == 0 && playerData->flags["survivedForest"])
+        {
+            if (command.second[1] == "leave")
+            {
+                graphics->WriteLine("You retrace your path through the forest out into the clear air again");
+                LoadLevel("forestexit");
+                return;
+            }
+        }
+
+        if (randomLevelData > 0)
+        {
+            int r = rand() % 20;
+
+            if (r == 1 && !playerData->flags["adventurer"])
+            {
+                LoadDialogue("lostadventurer");
+                return;
+            }
+            else if (r == 2)
+            {
+                graphics->WriteLine("A great creature, with legs that line the sides of its body like a centipede, stalks past you through the forest. @400 You feel notably more uncomfortable @300");
+            }
+            else if (r == 3)
+            {
+                graphics->WriteLine("The brittle bones of an old skeleton crunch beneath your horse with a shock");
+            }
+        }
+
+        if (answerSheet[randomLevelData] == command.second[1])
+        {
+            randomLevelData++;
+
+            graphics->WriteLine("*you ride " + command.second[1] + "*");
+
+            if (randomLevelData == sizeof(answerSheet) / sizeof(answerSheet[0]))
+            {
+                LoadLevel("forestexit");
+            }
+            else 
+            {
+                LoadLevel("forestpath");
+            }
+            return;
+        }
+        else 
+        {
+            graphics->WriteLine("you can feel yourself getting lost @200");
+            randomLevelData = -1;
+            return;
+        }
+    }
+
+    DefaultLevelCommands(&command);
+}
+
 void LoadLevel(std::string levelName)
 {
-    LoadLevelData(&currentLevel, levelName + ".json");
+    LoadLevelData(currentLevel, levelName + ".json");
 
-    playerData->currentLocation = (GameState)currentLevel.areaCode;
+    playerData->currentLocation = levelName;
 
-    if (currentLevel.specialArea)
+    if (currentLevel->specialArea)
     {
-        ChangeState((GameState)currentLevel.areaCode);
+        ChangeState((GameState)currentLevel->areaCode);
     }
     else 
     {
@@ -241,14 +373,7 @@ void LoadLevel(std::string levelName)
 }
 void LoadCurrentLevel()
 {
-    if (currentLevel.specialArea)
-    {
-        ChangeState((GameState)currentLevel.areaCode);
-    }
-    else
-    {
-        ChangeState(GameState::DefaultLevel);
-    }
+    LoadLevel(playerData->currentLocation);
 }
 
 void LevelCommand()
@@ -272,40 +397,24 @@ void DefaultLevelCommands(Command* c)
         if (c->second.size() == 1)
         {
             // default look command with no parameters
-            graphics->WriteLine(currentLevel.lookInfo["default"]);
+            graphics->WriteLine(currentLevel->lookInfo["default"]);
+            return;
         }
-        else if (currentLevel.lookInfo.count(c->second[1]))
+        else if (currentLevel->lookInfo.count(c->second[1]))
         {
-            graphics->WriteLine(currentLevel.lookInfo[c->second[1]]);
+            graphics->WriteLine(currentLevel->lookInfo[c->second[1]]);
+            return;
         }
     }
     else if (c->first == "go")
     {
         if (c->second.size() < 2) return;
 
-        for (int i = 0; i < currentLevel.places.size(); i++)
+        for (int i = 0; i < currentLevel->places.size(); i++)
         {
-            // special place that instead opens dialogue
-            if (currentLevel.places[i][0] == '$')
+            if (currentLevel->places[i].first == c->second[1])
             {
-                std::string s;
-                for (int j = 1; j < currentLevel.places[i].length(); j++)
-                {
-                    if (currentLevel.places[i][j] == ' ') break;
-
-                    s.push_back(currentLevel.places[i][j]);
-                }
-
-                if (s == c->second[1])
-                {
-                    LoadDialogue(c->second[1].substr(c->second[1].find(' ')));
-                    return;
-                }
-            }
-
-            if (currentLevel.places[i] == c->second[1])
-            {
-                LoadLevel(c->second[1]);
+                LoadLevel(currentLevel->places[i].second);
                 return;
             }
         }
@@ -314,11 +423,11 @@ void DefaultLevelCommands(Command* c)
     {
         if (c->second.size() < 2) return;
 
-        for (int i = 0; i < currentLevel.people.size(); i++)
+        for (int i = 0; i < currentLevel->people.size(); i++)
         {
-            if (currentLevel.people[i] == c->second[1])
+            if (currentLevel->people[i].second == c->second[1])
             {
-                LoadDialogue(c->second[1]);
+                LoadDialogue(currentLevel->people[i].first);
                 return;
             }
         }
@@ -327,7 +436,7 @@ void DefaultLevelCommands(Command* c)
     {
         if (c->second.size() > 1 && c->second[1] == "area")
         {
-            graphics->WriteLine(currentLevel.helptext);
+            graphics->WriteLine(currentLevel->helptext);
 
             return;
         }
@@ -341,16 +450,16 @@ void DefaultLevelCommands(Command* c)
                 "help area - gives a specific hint for your current location"
             };
 
-            graphics->WriteLines(helpLines, 5, 200);
+            graphics->WriteLines(helpLines, 5);
 
             return;
         }
     }
     else if (c->first == "back")
     {
-        if (currentLevel.lastLevelName != "")
+        if (currentLevel->lastLevelName != "")
         {
-            LoadLevel(currentLevel.lastLevelName);
+            LoadLevel(currentLevel->lastLevelName);
             return;
         }
 
@@ -363,6 +472,7 @@ void DefaultLevelCommands(Command* c)
 
 void LoadDialogue(std::string characterName)
 {
+    currentTree->Clear();
     currentTree->LoadDialogueTree(characterName + ".json");
     ChangeState(GameState::Dialogue);
 }
@@ -401,22 +511,7 @@ void SelectCharacter()
         }
         else
         {
-            // setting up player abilities
-            if (input == "warrior")
-            {
-                playerData->attacks.push_back(PlayerAttacks::Slash);
-                playerData->skills.push_back(PlayerSkills::Heal);
-            }
-            else if (input == "wizard")
-            {
-                playerData->attacks.push_back(PlayerAttacks::Poke);
-                playerData->skills.push_back(PlayerSkills::Lightning);
-            }
-            else if (input == "archer")
-            {
-                playerData->attacks.push_back(PlayerAttacks::Shoot);
-                playerData->skills.push_back(PlayerSkills::Focus);
-            }
+            playerData->characterClass = input;
 
             break;
         }
@@ -478,7 +573,14 @@ void SelectCharacter()
         }
     }
 
+    graphics->WriteLine("you can use space to skip likes, but use it sparingly - you dont want to miss any information");
+
     playerData->name = name;
 
     ChangeState(GameState::OpeningCutscene);
+}
+
+void SetPlayerFlags(std::string flag, bool value)
+{
+    playerData->flags[flag] = value;
 }

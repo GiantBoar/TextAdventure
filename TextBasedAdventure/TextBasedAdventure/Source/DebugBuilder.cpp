@@ -181,10 +181,13 @@ void Debug::MakeDialogueTree()
 	std::string treeName, tempName;
 	std::getline(std::cin, tempName);
 	for (int i = 0; i < tempName.length(); i++) if (tempName[i] != ' ') treeName.push_back(tempName[i]);
-	std::string characterName = treeName;
 	treeName += ".json";
 
 	DialogueTree tree = DialogueTree();
+
+	std::cout << "what is the character's name?\n> ";
+	std::string characterName;
+	std::getline(std::cin, characterName);
 	tree.characterName = characterName;
 	CreateNode(&tree, -1);
 
@@ -256,13 +259,16 @@ void Debug::MakeLevel()
 		{
 			if (!std::isdigit(num[i]))
 			{
-				std::cout << "input error\n";
+				std::cout << "input error" << std::endl;
+				Sleep(200);
 				continue;
 			}
 		}
 
 		int index = std::stoi(num);
 		levelData.areaCode = index;
+
+		break;
 	}
 
 	std::cout << "enter the levels help text:\n> ";
@@ -280,7 +286,7 @@ void Debug::MakeLevel()
 void Debug::SaveLevel(LevelData* levelData, std::string fileName)
 {
 	std::ofstream levelFile(ResourcePath("Levels/" + fileName), std::ifstream::binary | std::ofstream::trunc);
-	Json::Value data, people, places, looks;
+	Json::Value data, people, places, looks, j;
 
 	if (!levelFile.good()) printf(" but something went wrong!");
 
@@ -294,11 +300,15 @@ void Debug::SaveLevel(LevelData* levelData, std::string fileName)
 
 	for (int i = 0; i < levelData->people.size(); i++)
 	{
-		people[i] = levelData->people[i];
+		j[0] = levelData->people[i].first;
+		j[1] = levelData->people[i].second;
+		people[i] = j;
 	}
 	for (int i = 0; i < levelData->places.size(); i++)
 	{
-		places[i] = levelData->places[i];
+		j[0] = levelData->places[i].first;
+		j[1] = levelData->places[i].second;
+		places[i] = j;
 	}
 	for (const auto& kvpair : levelData->lookInfo)
 	{
@@ -318,6 +328,7 @@ void Debug::SaveLevel(LevelData* levelData, std::string fileName)
 void Debug::LevelCommand(LevelData* levelData, std::string levelName)
 {
 	std::string command;
+	std::pair<std::string, std::string> s;
 
 	while (true)
 	{
@@ -327,17 +338,21 @@ void Debug::LevelCommand(LevelData* levelData, std::string levelName)
 
 		if (command == "createperson")
 		{
-			std::cout << "enter their name\n> ";
-			std::getline(std::cin, command);
+			std::cout << "enter their dialogue tree name\n> ";
+			std::getline(std::cin, s.first);
+			std::cout << "enter their character name\n> ";
+			std::getline(std::cin, s.second);
 
-			levelData->people.push_back(command);
+			levelData->people.push_back(s);
 		}
 		else if (command == "createplace")
 		{
-			std::cout << "enter the location name\n> ";
-			std::getline(std::cin, command);
+			std::cout << "enter their place file name\n> ";
+			std::getline(std::cin, s.first);
+			std::cout << "enter their location name\n> ";
+			std::getline(std::cin, s.second);
 
-			levelData->places.push_back(command);
+			levelData->places.push_back(s);
 		}
 		else if (command == "createlook")
 		{

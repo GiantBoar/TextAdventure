@@ -12,8 +12,8 @@ struct LevelData
 {
 	std::string name = "", description = "", helptext = "", lastLevelName = "";
 	std::unordered_map<std::string, std::string> lookInfo = std::unordered_map<std::string, std::string>();
-	std::vector<std::string> people = std::vector<std::string>();
-	std::vector<std::string> places = std::vector<std::string>();
+	std::vector<std::pair<std::string, std::string>> people = std::vector<std::pair<std::string, std::string>>();
+	std::vector<std::pair<std::string, std::string>> places = std::vector<std::pair<std::string, std::string>>();
 	bool specialArea = false;
 	int areaCode = 0;
 };

@@ -1,0 +1,47 @@
+{
+	"characterName" : "Lost Adventurer",
+	"tree" : 
+	[
+		{
+			"ID" : 1,
+			"dialogue" : "Finally! Someone else. I've been lost in this forest for ages. I have no idea how to get out!",
+			"options" : 
+			[
+				{
+					"ID" : 2,
+					"dialogue" : "Me neither"
+				}
+			],
+			"rootID" : -1
+		},
+		{
+			"ID" : 2,
+			"dialogue" : "all I know is that when you enter you go north a bit, east a bit, and then north a bit again. I got lost from there. A map would be far too helpful",
+			"options" : 
+			[
+				{
+					"ID" : 3,
+					"dialogue" : "Thank you for the advice"
+				}
+			],
+			"rootID" : 1
+		},
+		{
+			"ID" : 3,
+			"dialogue" : "No problem! I hope we both get out of here",
+			"options" : 
+			[
+				{
+					"ID" : 4,
+					"dialogue" : "*continue your journey*"
+				}
+			],
+			"rootID" : 2
+		},
+		{
+			"ID" : 4,
+			"dialogue" : "END flags adventurer 1",
+			"rootID" : 3
+		}
+	]
+}

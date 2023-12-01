@@ -1,27 +1,27 @@
 {
-	"characterName" : "traveller",
-	"tree" :
+	"characterName" : "Old Traveller",
+	"tree" : 
 	[
 		{
 			"ID" : 1,
-				"dialogue" : "Fire's warm, I wouldn't mind the company",
-				"options" :
-				[
-			{
-				"ID" : 2,
+			"dialogue" : "Fire's warm, I wouldn't mind the company",
+			"options" : 
+			[
+				{
+					"ID" : 2,
 					"dialogue" : "*sit beside him*"
-			},
+				},
 				{
 					"ID" : 3,
 					"dialogue" : "I'm looking for a guide. Know which way the mountain is?"
 				}
-				] ,
-				"rootID" : -1
+			],
+			"rootID" : -1
 		},
 		{
 			"ID" : 2,
 			"dialogue" : "Where'd you ride in from? @200 Havent seen many around since the rot started spreading",
-			"options" :
+			"options" : 
 			[
 				{
 					"ID" : 14,
@@ -31,13 +31,13 @@
 					"ID" : 19,
 					"dialogue" : "Just wandering past. Looking for somewhere new"
 				}
-			] ,
+			],
 			"rootID" : 1
 		},
 		{
 			"ID" : 3,
-			"dialogue" : "*he stares at you from beneath his worn leather hat* mountain? You're on a pilgrimage? Don't look the type. *he returns to his fire* hard enough finding it through the mist, @150 but from what I remember its through the wood north of here. @450 Wouldn't recommend the journey. This rot has fucked everything up, animals rotting alive, people starving.",
-			"options" :
+			"dialogue" : "*he stares at you from beneath his worn leather hat* mountain? You're on a pilgrimage? Don't look the type. *he returns to his fire* hard enough finding it through the mist, @150 but from what I remember its through the wood north of here. @450 Wouldn't recommend the journey. This rot has messed everything up, animals rotting alive, people starving.",
+			"options" : 
 			[
 				{
 					"ID" : 4,
@@ -47,30 +47,25 @@
 					"ID" : 6,
 					"dialogue" : "What happened?"
 				}
-			] ,
+			],
 			"rootID" : 1
 		},
 		{
 			"ID" : 4,
 			"dialogue" : "Nothing grows any more. The earth is thick, @150 stinking. @250 Wells are full of bile and mucus, @400 even trees have blackened and bled. @300 *his eyes return to yours* we've got to do whatever we can to survive. You and me both.",
-			"options" :
+			"options" : 
 			[
 				{
-					"ID" : 5,
+					"ID" : 20,
 					"dialogue" : "*reach for a weapon*"
 				}
-			] ,
+			],
 			"rootID" : 3
-		},
-		{
-			"ID" : 5,
-			"dialogue" : "BATTLE",
-			"rootID" : 4
 		},
 		{
 			"ID" : 6,
 			"dialogue" : "That wretched rider. @250 He's hollowed the ground and filled it with bile. @150 Nothing but sickness and rot as far as you can see. @250 No food can grow, @100 even the animal meat is worm-ridden and pale, @100 and all the fish are slick with oil and festering at the river banks.",
-			"options" :
+			"options" : 
 			[
 				{
 					"ID" : 7,
@@ -90,70 +85,60 @@
 		{
 			"ID" : 7,
 			"dialogue" : "*he chuckles sadly* @500 Not even gods can fix this. @200 They've all left this place, @150 left us behind. @250 Gone somewhere new. @300 *he pulls a knife from his pocket with a neat movement and traces the dull tip against his finger* @200 We're our own gods now. No mercy.",
-			"options" :
+			"options" : 
 			[
 				{
-					"ID" : 8,
+					"ID" : 20,
 					"dialogue" : "*ready for a fight*"
 				}
-			] ,
+			],
 			"rootID" : 6
-		},
-		{
-			"ID" : 8,
-			"dialogue" : "BATTLE",
-			"rootID" : 7
 		},
 		{
 			"ID" : 9,
 			"dialogue" : "Heh. Following the wind. I'll be dead before tomorrow if I dont find something to eat anyways. Worms and grass won't keep a soldier strong. @500 *his eyes flicker like dying embers* It's every man for himself",
-			"options" :
+			"options" : 
 			[
 				{
-					"ID" : 10,
+					"ID" : 20,
 					"dialogue" : "*reach for your weapon*"
 				}
-			] ,
+			],
 			"rootID" : 6
-		},
-		{
-			"ID" : 10,
-			"dialogue" : "BATTLE",
-			"rootID" : 9
 		},
 		{
 			"ID" : 11,
 			"dialogue" : "I'm a pile of old bones, dying and rotting like the earth around me. @500 I won't last the night. This fire is the only peace I'll see.",
-			"options" :
+			"options" : 
 			[
 				{
 					"ID" : 12,
 					"dialogue" : "I hope you rest easy"
 				}
-			] ,
+			],
 			"rootID" : 6
 		},
 		{
 			"ID" : 12,
-			"dialogue" : "Heh. Thanks @500 *he continues to stare into the fire. The flames dance in the reflection of his eyes*",
-			"options" :
+			"dialogue" : "Heh. Thanks @500 *he continues to stare into the fire. The flames dance in the reflection of his eyes* @300 If it's the mountain you're after, follow the road north into that forest, assuming you can make it through.",
+			"options" : 
 			[
 				{
 					"ID" : 13,
 					"dialogue" : "*leave*"
 				}
-			] ,
+			],
 			"rootID" : 11
 		},
 		{
 			"ID" : 13,
-			"dialogue" : "END",
+			"dialogue" : "END level forestentrance",
 			"rootID" : 12
 		},
 		{
 			"ID" : 14,
 			"dialogue" : "*he looks up at you* What for, kid? @300 Don't trouble yourself with a demon. Die peaceful as you can, it's all you can hope for.",
-			"options" :
+			"options" : 
 			[
 				{
 					"ID" : 15,
@@ -163,59 +148,61 @@
 					"ID" : 17,
 					"dialogue" : "I'm going to kill the rider"
 				}
-			] ,
+			],
 			"rootID" : 2
 		},
 		{
 			"ID" : 15,
 			"dialogue" : "Stay. The fire's warm. Can't have you wandering off and dying somewhere lonely. *flecks of drool scatter down his dirty jacket*",
-			"options" :
-			[
-				{
-					"ID" : 16,
-					"dialogue" : "*defend yourself*"
-				}
-			] ,
-			"rootID" : 14
-		},
-		{
-			"ID" : 16,
-			"dialogue" : "BATTLE",
-			"rootID" : 15
-		},
-		{
-			"ID" : 17,
-			"dialogue" : "Spirited! Ha. Good luck, little soldier, but now's not the time for fantasies. Look around you, the world is dying and rotting away beneath our feet. It's all we can do to go one more day *he reaches for his pocket*",
-			"options" :
-			[
-				{
-					"ID" : 18,
-					"dialogue" : "*ready a weapon*"
-				}
-			] ,
-			"rootID" : 14
-		},
-		{
-			"ID" : 18,
-			"dialogue" : "BATTLE",
-			"rootID" : 17
-		},
-		{
-			"ID" : 19,
-			"dialogue" : "There aren't wanderers anymore. None that the wildlife hasn't churned up. *his gaunt face tightens in anger* And better me than some rotten pig gets to live another day",
-			"options" :
+			"options" : 
 			[
 				{
 					"ID" : 20,
 					"dialogue" : "*defend yourself*"
 				}
-			] ,
+			],
+			"rootID" : 14
+		},
+		{
+			"ID" : 17,
+			"dialogue" : "Spirited! Ha. Good luck, little soldier, but now's not the time for fantasies. Look around you, the world is dying and rotting away beneath our feet. It's all we can do to go one more day *he reaches for his pocket*",
+			"options" : 
+			[
+				{
+					"ID" : 20,
+					"dialogue" : "*ready a weapon*"
+				}
+			],
+			"rootID" : 14
+		},
+		{
+			"ID" : 19,
+			"dialogue" : "There aren't wanderers anymore. None that the wildlife hasn't churned up. *his gaunt face tightens in anger* And better me than some rotten pig gets to live another day",
+			"options" : 
+			[
+				{
+					"ID" : 20,
+					"dialogue" : "*defend yourself*"
+				}
+			],
 			"rootID" : 2
 		},
 		{
 			"ID" : 20,
-			"dialogue" : "BATTLE",
+			"dialogue" : "*you exchange blows, but his body is old and bony, and you end up launching him onto his own fire, where he bursts into flames and agony* @500 *in the absence of a little more mist, you can see the mountain in the north distance*",
+			"options" : 
+			[
+				{
+					"ID" : 21,
+					"dialogue" : "*keep riding*"
+				}
+			],
 			"rootID" : 19
+		},
+		{
+			"ID" : 21,
+			"dialogue" : "END location forestentrance",
+			"rootID" : 20
 		}
 	]
 }

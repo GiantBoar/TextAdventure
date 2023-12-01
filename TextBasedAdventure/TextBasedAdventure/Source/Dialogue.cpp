@@ -96,6 +96,11 @@ void DialogueTree::ChooseOption(int optionIndex)
 	DrawNode();
 }
 
+void DialogueTree::Clear() {
+	tree.clear();
+	IDIndex.clear();
+}
+
 DialogueTree* currentTree = new DialogueTree;
 
 void DrawNode()
@@ -103,7 +108,7 @@ void DrawNode()
 	GraphicsHandler* graphics = GraphicsHandler::GetInstance();
 	DialogueNode* node = currentTree->GetCurrentNode();
 
-	if (node->dialogue.substr(0, 6) == "BATTLE" || node->dialogue.substr(0, 3) == "END")
+	if (node->dialogue.substr(0, 3) == "END")
 	{
 		std::vector<std::string> args;
 		int currentArg = 0;
@@ -122,17 +127,29 @@ void DrawNode()
 			}
 		}
 
-		if (args[0] == "BATTLE")
+		if (args.size() == 1)
 		{
-
+			LoadCurrentLevel();
+			return;
 		}
-		else if (args[0] == "END")
+
+		if (args[1] == "location")
 		{
-			if (args.size() == 1) LoadCurrentLevel();
-			else
-			{
-				LoadLevel(args[1] + ".json");
-			}
+			if (args.size() < 3) return;
+
+			LoadLevel(args[2]);
+		}
+		else if (args[1] == "flags")
+		{
+			if (args.size() < 4) return;
+
+			SetPlayerFlags(args[2], (bool)std::stoi(args[3]));
+
+			LoadCurrentLevel();
+		}
+		else
+		{
+			LoadCurrentLevel();
 		}
 
 		return;
@@ -163,8 +180,6 @@ void SelectDialogueOption()
 	GraphicsHandler* graphics = GraphicsHandler::GetInstance();
 
 	int index = graphics->selectedButtonIndex;
-
-	std::cout << index;
 
 	currentTree->ChooseOption(index);
 }

@@ -1,0 +1,14 @@
+{
+	"areaCode" : 10,
+	"description" : "unfortunately, this is the end of your journey",
+	"help" : "there are many more stops on your path to the mountain, but this is where your journey must end",
+	"lastLevel" : "",
+	"lookInfo" : 
+	{
+		"default" : "the end of the line"
+	},
+	"name" : "Town",
+	"people" : null,
+	"places" : null,
+	"special" : true
+}

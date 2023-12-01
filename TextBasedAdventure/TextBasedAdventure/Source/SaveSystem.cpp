@@ -1,4 +1,4 @@
-#include "../Headers/SaveSystem.h"\
+#include "../Headers/SaveSystem.h"
 
 void SaveSystem::SavePlayerData(PlayerData* data)
 {
@@ -8,6 +8,7 @@ void SaveSystem::SavePlayerData(PlayerData* data)
 
 
 	playerData["name"] = data->name;
+	playerData["characterClass"] = data->characterClass;
 
 	for (const auto& kvpair : data->flags)
 	{
@@ -16,7 +17,7 @@ void SaveSystem::SavePlayerData(PlayerData* data)
 
 	playerData["flags"] = flagMap;
 
-	playerData["location"] = (int)data->currentLocation;
+	playerData["location"] = data->currentLocation;
 
 
 	playerFile << playerData;
@@ -33,6 +34,9 @@ void SaveSystem::LoadPlayerData(PlayerData* data)
 	playerFile >> playerData;
 
 	data->name = playerData["name"].asString();
+	data->characterClass = playerData["characterClass"].asString();
+
+	data->currentLocation = playerData["location"].asString();
 
 	data->flags.clear();
 	std::string key;
@@ -41,8 +45,6 @@ void SaveSystem::LoadPlayerData(PlayerData* data)
 		key = playerData["keys"].getMemberNames()[i];
 		data->flags[key] = playerData["keys"][key].asBool();
 	}
-
-	data->currentLocation = (GameState)playerData["location"].asInt();
 
 	playerFile.close();
 }

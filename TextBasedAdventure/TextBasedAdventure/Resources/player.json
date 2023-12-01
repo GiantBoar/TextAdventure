@@ -1,9 +1,9 @@
 {
+	"characterClass" : "warrior",
 	"flags" : 
 	{
-		"SurvivedForest" : false,
-		"Test" : false
+		"survivedForest" : true
 	},
-	"location" : 0,
-	"name" : ""
+	"location" : "town",
+	"name" : "max"
 }

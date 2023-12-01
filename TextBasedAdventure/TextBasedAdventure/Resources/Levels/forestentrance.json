@@ -1,0 +1,14 @@
+{
+	"areaCode" : 7,
+	"description" : "The air is thick and damp, and the roots of the trees twist and contort beneath your horse's hooves. The scent of decay is on the air. The only senses you can rely on are your cardinal directions.",
+	"help" : "A compass could come in handy. But you never know what you could stumble across in the forest.",
+	"lastLevel" : "",
+	"lookInfo" : 
+	{
+		"default" : "you can barely see through the closest layer of trees"
+	},
+	"name" : "The Forest",
+	"people" : null,
+	"places" : null,
+	"special" : true
+}

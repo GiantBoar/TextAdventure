@@ -8,16 +8,20 @@
 #include "Graphics.h"
 #include "Input.h"
 #include "SaveSystem.h"
-#include "Combat.h"
 
-#define DEBUG_BUILD true
+#define DEBUG_BUILD false
 
 #if DEBUG_BUILD
 #include "DebugBuilder.h"
+#else
+#include "Dialogue.h"
+#include "Level.h";
 #endif
 
 extern class GraphicsHandler* graphics;
 extern class InputHandler* inputs;
+extern class SaveSystem::PlayerData* playerData;
+extern class LevelData* currentLevel;
 
 extern class SaveSystem::PlayerData* playerData;
 
@@ -35,6 +39,12 @@ enum class GameState
 	OpeningCutscene,
 	DefaultLevel,
 	Campfire,
+
+	ForestEntrance,
+	ForestPath,
+	ForestExit,
+
+	Town
 };
 
 void GameLoop();
@@ -45,6 +55,8 @@ std::clock_t GetTime();
 void EndGame();
 void ContinueGame();
 COORD GetInputPosition();
+
+void ForestCommands();
 
 void ChangeState(GameState newState);
 void LoadLevel(std::string levelName);

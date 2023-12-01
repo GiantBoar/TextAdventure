@@ -248,7 +248,7 @@ void GraphicsHandler::WarnInputError()
 	printf("\033[%dmINPUT ERROR\033[0m", COLOUR_BRIGHT(COLOUR_RED));
 
 	// wait until the pause time has passed
-	Sleep(1000);
+	Sleep(700);
 
 	Redraw();
 }
@@ -381,7 +381,7 @@ void GraphicsHandler::WriteLine(std::string line)
 	textCache[lastCacheIndex] = "";
 	Redraw();
 
-	currentWriteSpeed = 40;
+	currentWriteSpeed = WORDTYPESPEED;
 
 	std::string currentWord = "";
 
@@ -417,28 +417,42 @@ void GraphicsHandler::WriteLine(std::string line)
 		}
 
 		currentWord.push_back(line[i]);
+		std::cout << line[i];
 
-		if (line[i] == ' ')
+		if (line[i] == '*')
+		{
+			if (!actionText)
+			{
+				currentWord += "\033[" + std::to_string(COLOUR_GREY) + "m";
+				std::cout << "\033[" + std::to_string(COLOUR_GREY) + "m";
+				actionText = true;
+			}
+			else
+			{
+				currentWord += "\033[0m";
+				std::cout << "\033[0m";
+				actionText = false;
+			}
+		}
+		else if (line[i] == ' ')
 		{
 			textCache[lastCacheIndex] += currentWord;
 			currentWord = "";
 		}
 
-		std::cout << line[i];
 		Sleep(currentWriteSpeed);
 	}
+
+	if (currentWriteSpeed != 0) Sleep(500);
 
 	if(currentWord.length() != 0) textCache[lastCacheIndex] += currentWord;
 }
 
-void GraphicsHandler::WriteLines(std::string lines[], int lineNum, int linePause)
+void GraphicsHandler::WriteLines(std::string lines[], int lineNum)
 {
 	for (int i = 0; i < lineNum; i++)
 	{
 		WriteLine(lines[i]);
-
-		if(currentWriteSpeed != 0)
-			Sleep(linePause);
 	}
 }
 

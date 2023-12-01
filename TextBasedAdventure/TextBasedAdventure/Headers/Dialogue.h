@@ -11,6 +11,7 @@
 
 void LoadCurrentLevel();
 void LoadLevel(std::string levelName);
+void SetPlayerFlags(std::string flag, bool value);
 
 // smaller struct used to store individual 'branches' of dialogue, such as person says something and user is prompted for an answer
 struct DialogueNode
@@ -39,6 +40,8 @@ public:
 	DialogueNode* GetNode(int id);
 	DialogueNode* GetCurrentNode();
 	void ChooseOption(int optionIndex);
+
+	void Clear();
 };
 
 void DrawNode();

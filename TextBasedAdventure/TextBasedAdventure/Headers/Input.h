@@ -30,7 +30,6 @@ private:
 	InputHandler();
 
 	bool splitInput;
-	std::vector<std::string> inputOptions;
 
 public:
 	class KeyData
@@ -55,5 +54,6 @@ public:
 	std::string GetInputString();
 	Command GetCommandString();
 
+	std::vector<std::string> inputOptions;
 	void SetInputOptions(std::vector<std::string> options);
 };

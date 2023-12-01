@@ -1,0 +1,24 @@
+{
+	"areaCode" : 9,
+	"description" : "The crushing weight of the forest subsides as you realise that there are no trees ahead. The wild ferocity of the forest's flora wanes as you venture further from it's source, and the ground becomes more rocky and cobbled. A warm town atmosphere can be felt from up ahead.",
+	"help" : "Just a little further, go north",
+	"lastLevel" : "forestentrance",
+	"lookInfo" : 
+	{
+		"default" : "Further north, brick houses and paved roads delight your eyes, as well as a gentle hum of life."
+	},
+	"name" : "The Forest",
+	"people" : null,
+	"places" : 
+	[
+		[
+			"north",
+			"town"
+		],
+		[
+			"town",
+			"town"
+		]
+	],
+	"special" : true
+}

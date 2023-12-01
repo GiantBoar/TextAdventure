@@ -1,0 +1,26 @@
+{
+	"areaCode" : 1,
+	"description" : "test",
+	"help" : "test",
+	"lastLevel" : "",
+	"lookInfo" : 
+	{
+		"default" : "test"
+	},
+	"name" : "test",
+	"people" : 
+	[
+		[
+			"traveller",
+			"old traveller"
+		]
+	],
+	"places" : 
+	[
+		[
+			"fartopia",
+			"fartland"
+		]
+	],
+	"special" : false
+}

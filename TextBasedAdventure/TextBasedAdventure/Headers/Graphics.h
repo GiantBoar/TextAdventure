@@ -31,6 +31,7 @@
 #pragma endregion
 
 #define WORDCACHESIZE 8
+#define WORDTYPESPEED 35
 
 enum class GameState;
 
@@ -186,6 +187,7 @@ public:
 	std::string textCache[WORDCACHESIZE];
 	short lastCacheIndex = 0;
 	int cacheOffset;
+	bool actionText = false;
 
 	// our singleton instance retriever
 	static GraphicsHandler* GetInstance();
@@ -225,7 +227,7 @@ public:
 	// TEXT
 	void DrawInputBox();
 	void WriteLine(std::string line);
-	void WriteLines(std::string lines[], int lineNum, int linePause);
+	void WriteLines(std::string lines[], int lineNum);
 	void DrawWordCache();
 	void ClearWordCache();
 	void WarnInputError();

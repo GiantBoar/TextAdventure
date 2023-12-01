@@ -1,0 +1,14 @@
+{
+	"areaCode" : 8,
+	"description" : "you move further into the forest",
+	"help" : "A compass could come in handy. But you never know what you could stumble across in the forest.",
+	"lastLevel" : "",
+	"lookInfo" : 
+	{
+		"default" : "you can barely see through the closest layer of trees"
+	},
+	"name" : "The Forest",
+	"people" : null,
+	"places" : null,
+	"special" : true
+}

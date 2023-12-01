@@ -22,17 +22,14 @@ namespace SaveSystem
 	class PlayerData
 	{
 	public:
-		std::string name;
-		GameState currentLocation = (GameState)0;
-
-		std::vector<PlayerAttacks> attacks;
-		std::vector<PlayerSkills> skills;
+		std::string name, characterClass;
+		std::string currentLocation;
 
 		// collection of flags for events / progression
 		std::map<std::string, bool> flags =
 		{
-			{ "SurvivedForest", false },
-			{ "Test", false }
+			{ "adventurer", false },
+			{ "survivedForest", false }
 		};
 	};
 

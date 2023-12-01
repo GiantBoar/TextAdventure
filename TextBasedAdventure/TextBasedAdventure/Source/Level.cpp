@@ -17,13 +17,13 @@ void LoadLevelData(LevelData* levelData, std::string fileName)
 	levelData->people.clear();
 	for (int i = 0; i < data["people"].size(); i++)
 	{
-		levelData->people.push_back(data["people"][i].asString());
+		levelData->people.push_back({ data["people"][i][0].asString(), data["people"][i][1].asString() });
 	}
 
 	levelData->places.clear();
 	for (int i = 0; i < data["places"].size(); i++)
 	{
-		levelData->places.push_back(data["places"][i].asString());
+		levelData->places.push_back({ data["places"][i][0].asString(), data["places"][i][1].asString() });
 	}
 
 	levelData->lookInfo.clear();
